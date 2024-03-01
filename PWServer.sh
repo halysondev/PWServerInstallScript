@@ -1,11 +1,11 @@
 #!/bin/bash
+script_version="1.4.8"
 
 # Perfect World Server Script
 # Author: Halyson Cesar
 # Git: https://github.com/halysondev/PWServerInstallScript
 
 # Script Information
-script_version="1.4.8" # Current version of this script
 remote_script_url="https://raw.githubusercontent.com/halysondev/PWServerInstallScript/main/PWServer.sh" # URL for updates
 local_script_path="${BASH_SOURCE[0]}" # Path to the current script
 temp_script_path="/tmp/PWServer.sh" # Temporary path for downloads
