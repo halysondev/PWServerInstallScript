@@ -59,7 +59,7 @@
 
 
 # Script Information
-script_version="1.3.7" # Current version of this script
+script_version="1.3.8" # Current version of this script
 remote_script_url="https://raw.githubusercontent.com/halysondev/PWServerInstallScript/main/PWServer.sh" # URL for updates
 local_script_path="${BASH_SOURCE[0]}" # Path to the current script
 temp_script_path="/tmp/PWServer.sh" # Temporary path for downloads
@@ -72,6 +72,22 @@ PW_PORT_1="${PW_PORT_1:-29000}"
 PW_PORT_2="${PW_PORT_1:-29001}"
 PW_PORT_3="${PW_PORT_1:-29002}"
 PW_PORT_4="${PW_PORT_1:-29003}"
+
+PW_START_GAMED="${PW_START_GAMED:-true}"
+
+PW_START_GLINKD_1="${PW_START_GLINKD:-true}"
+PW_START_GLINKD_2="${PW_START_GLINKD:-true}"
+PW_START_GLINKD_3="${PW_START_GLINKD:-true}"
+PW_START_GLINKD_4="${PW_START_GLINKD:-true}"
+
+PW_START_GAMEDBD="${PW_START_GAMEDBD:-true}"
+PW_START_GFACTIOND="${PW_START_GFACTIOND:-true}"
+PW_START_GACD="${PW_START_GACD:-true}"
+PW_START_GDELIVERYD="${PW_START_GDELIVERYD:-true}"
+PW_START_GAUTHD="${PW_START_GAUTHD:-true}"
+PW_START_UNIQUENAMED="${PW_START_UNIQUENAMED:-true}"
+PW_START_LOGSERVICE="${PW_START_LOGSERVICE:-true}"
+
 
 DB_HOST="${PW_DB_HOST:-10.0.0.1}"
 DB_USER="${PW_DB_USER:-root}"
@@ -154,36 +170,30 @@ function PWServerStart {
     
     # List of services to start, each defined by its name and configuration file.
     declare -A services=(
-        ["Log Service"]="logservice/logservice.conf"
-        ["Auth"]="gauthd/gamesys.conf"
-        ["Unique Name"]="uniquenamed/gamesys.conf"
-        ["Data Base"]="gamedbd/gamesys.conf"
-        ["Anti Cheat"]="gacd/gamesys.conf"
-        ["Faction"]="gfactiond/gamesys.conf"
-        ["Delivery"]="gdeliveryd/gamesys.conf"
-        ["Link"]="glinkd/gamesys.conf 1" # Note the additional argument '1' for Link
-        ["Game Service"]="gamed/gs01 gs.conf gmserver.conf gsalias.conf" # Multiple configuration files
+        ["Log Service"]="${PW_START_LOGSERVICE:-false} logservice/logservice.conf"
+        ["Auth"]="${PW_START_GAUTHD:-false} gauthd/gamesys.conf"
+        ["Unique Name"]="${PW_START_UNIQUENAMED:-false} uniquenamed/gamesys.conf"
+        ["Data Base"]="${PW_START_GAMEDBD:-false} gamedbd/gamesys.conf"
+        ["Anti Cheat"]="${PW_START_GACD:-false} gacd/gamesys.conf"
+        ["Faction"]="${PW_START_GFACTIOND:-false} gfactiond/gamesys.conf"
+        ["Delivery"]="${PW_START_GDELIVERYD:-false} gdeliveryd/gamesys.conf"
+        ["Link 1"]="${PW_START_GLINKD_1:-false} glinkd/gamesys.conf 1"
+        ["Link 2"]="${PW_START_GLINKD_2:-false} glinkd/gamesys.conf 2"
+        ["Link 3"]="${PW_START_GLINKD_3:-false} glinkd/gamesys.conf 3"
+        ["Link 4"]="${PW_START_GLINKD_4:-false} glinkd/gamesys.conf 4"
+        ["Game Service"]="${PW_START_GAMED:-false} gamed/gs01 gs.conf gmserver.conf gsalias.conf" # Multiple configuration files
     )
     
     # Iterate over the service list and start each one
     for service in "${!services[@]}"; do
-        echo -e "=== [${txtred} START ${txtnrm}] ${service} ==="
-        config="${services[$service]}"
-        
-        # Determine the full path for the log based on the service name
-        log_path="/$ServerDir/logs/${service// /_}.log"
-        
-        # Handle the 'Link' service separately due to its special redirection
-        if [[ "$service" == "Link" ]]; then
-            cd "/$ServerDir/${service% *}" # Remove the additional argument before changing directory
-            ./"${service% *}" $config >> "$log_path" 2>&1 &
-        else
-            cd "/$ServerDir/${service% *}" # Assumes directory name from the service name
+        read -r start_service config <<< "${services[$service]}"
+        if [[ "$start_service" == "true" ]]; then
+            echo -e "=== [${txtred} START ${txtnrm}] ${service% *} ==="
+            log_path="/$ServerDir/logs/${service% *// /_}.log"
+            cd "/$ServerDir/${service% *}" || continue # Assumes directory name from the service name, skips if not found
             ./"${service% *}" $config > "$log_path" &
+            echo -e "=== [${txtgrn} OK ${txtnrm}] ===\n"
         fi
-        
-        echo -e "=== [${txtgrn} OK ${txtnrm}] ===\n"
-        # Sleep has been removed for simultaneous service startup. Reintroduce if necessary.
     done
 }
 
@@ -522,8 +532,11 @@ function PWServerBackup {
     # Remove the uncompressed backup directory
     rm -rf "${backup_path}"
 
-    # Securely transfer the backup to a remote server
-    sshpass -p "${SSH_PASS}" scp "${backup_file}.bz2" "${SSH_USER}@${remote_backup_path}"
+    # Only perform SSH transfer if external backup is enabled
+    if [[ "${EXTERNAL_BACKUP}" == "true" ]]; then
+        echo "Transferring backup to external server..."
+        sshpass -p "${SSH_PASS}" scp "${backup_file}.bz2" "${SSH_USER}@${remote_backup_path}"
+    fi
 
     # Clean up old backups and logs
     find "${BACKUP_DIR}" -type f -mtime +${RETENTION_DAYS} -exec rm {} \;
