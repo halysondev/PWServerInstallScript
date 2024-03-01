@@ -6,6 +6,7 @@
 
 
 #####ENVIROMENT VARIABLES#####
+# PW_AUTO_UPDATE: Auto-update toggle (set to false to disable auto updates)
 # PW_SERVER_DIR: Directory for server files and logs
 # PW_PORT_1: Port 1 for server
 # PW_PORT_2: Port 2 for server
@@ -23,43 +24,105 @@
 # PW_BACKUP_LOG_DIR: Backup log directory
 # PW_BACKUP_STORAGE_DIR: Backup storage directory
 # PW_BACKUP_RETENTION_DAYS: Retention period in days
+# PW_START_GAMED: Start GAMED service
+# PW_START_GLINKD_1: Start GLINKD service 1
+# PW_START_GLINKD_2: Start GLINKD service 2
+# PW_START_GLINKD_3: Start GLINKD service 3
+# PW_START_GLINKD_4: Start GLINKD service 4
+# PW_START_GAMEDBD: Start GAMEDBD service
+# PW_START_GFACTIOND: Start GFACTIOND service
+# PW_START_GACD: Start GACD service
+# PW_START_GDELIVERYD: Start GDELIVERYD service
+# PW_START_GAUTHD: Start GAUTHD service
+# PW_START_UNIQUENAMED: Start UNIQUENAMED service
+# PW_START_LOGSERVICE: Start LOGSERVICE service
 
 # TO SAVE THE ENVIRONMENT VARIABLES, YOU CAN EDIT .bashrc FILE WITH NANO
 # nano ~/.bashrc
 # AND ADD THE FOLLOWING LINES
+#PWSERVER CONFIG
+#AUTO UPDATE
+# export PW_AUTO_UPDATE="true"
+#DIR
 # export PW_SERVER_DIR="PWServer"
+#EXTERNAL PORTS
 # export PW_PORT_1="29000"
 # export PW_PORT_2="29001"
 # export PW_PORT_3="29002"
 # export PW_PORT_4="29003"
+#START
+# export PW_START_GAMED="true"
+# export PW_START_GLINKD_1="true"
+# export PW_START_GLINKD_2="true"
+# export PW_START_GLINKD_3="true"
+# export PW_START_GLINKD_4="true"
+# export PW_START_GAMEDBD="true"
+# export PW_START_GFACTIOND="true"
+# export PW_START_GACD="true"
+# export PW_START_GDELIVERYD="true"
+# export PW_START_GAUTHD="true"
+# export PW_START_UNIQUENAMED="true"
+# export PW_START_LOGSERVICE="true"
+#BACKUP
 # export PW_DB_HOST="127.0.0.1"
 # export PW_DB_USER="root"
 # export PW_DB_PASSWORD="1"
 # export PW_DB_NAME="pw"
 # export PW_EXTERNAL_BACKUP="false"
 # export PW_BACKUP_SSH_PASS="1"
+# export PW_BACKUP_SSH_USER="root"
+# export PW_BACKUP_SSH_HOST="127.0.0.1"
+# export PW_BACKUP_DIR="/PWStorage/backup"
+# export PW_BACKUP_LOG_DIR="/PWStorage/logs"
+# export PW_BACKUP_STORAGE_DIR="/PWStorage"
+# export PW_BACKUP_RETENTION_DAYS="5"
 # AND THEN RELOAD THE .bashrc FILE
 # source ~/.bashrc
 
 # to set the environment variables, you can use the export command
 # example: 
+#PWSERVER CONFIG
+#AUTO UPDATE
+# export PW_AUTO_UPDATE="true"
+#DIR
 # export PW_SERVER_DIR="PWServer"
+#EXTERNAL PORTS
 # export PW_PORT_1="29000"
-# export PW_PORT_2="29001" 
+# export PW_PORT_2="29001"
 # export PW_PORT_3="29002"
 # export PW_PORT_4="29003"
+#START
+# export PW_START_GAMED="true"
+# export PW_START_GLINKD_1="true"
+# export PW_START_GLINKD_2="true"
+# export PW_START_GLINKD_3="true"
+# export PW_START_GLINKD_4="true"
+# export PW_START_GAMEDBD="true"
+# export PW_START_GFACTIOND="true"
+# export PW_START_GACD="true"
+# export PW_START_GDELIVERYD="true"
+# export PW_START_GAUTHD="true"
+# export PW_START_UNIQUENAMED="true"
+# export PW_START_LOGSERVICE="true"
+#BACKUP
 # export PW_DB_HOST="127.0.0.1"
 # export PW_DB_USER="root"
 # export PW_DB_PASSWORD="1"
 # export PW_DB_NAME="pw"
 # export PW_EXTERNAL_BACKUP="false"
 # export PW_BACKUP_SSH_PASS="1"
+# export PW_BACKUP_SSH_USER="root"
+# export PW_BACKUP_SSH_HOST="127.0.0.1"
+# export PW_BACKUP_DIR="/PWStorage/backup"
+# export PW_BACKUP_LOG_DIR="/PWStorage/logs"
+# export PW_BACKUP_STORAGE_DIR="/PWStorage"
+# export PW_BACKUP_RETENTION_DAYS="5"
 
 # or edit configuration section in the script
 
 
 # Script Information
-script_version="1.3.8" # Current version of this script
+script_version="1.4.1" # Current version of this script
 remote_script_url="https://raw.githubusercontent.com/halysondev/PWServerInstallScript/main/PWServer.sh" # URL for updates
 local_script_path="${BASH_SOURCE[0]}" # Path to the current script
 temp_script_path="/tmp/PWServer.sh" # Temporary path for downloads
@@ -118,6 +181,13 @@ txtblu=$(tput setaf 4) # Blue
 txtpur=$(tput setaf 5) # Purple
 txtcyn=$(tput setaf 6) # Cyan
 txtnrm=$(tput sgr0)    # Reset to normal
+unicode_red_circle="\e[31m\U2B24\e[0m" unicode_red_light_circle="\e[91m\U2B24\e[0m"
+unicode_green_circle="\e[32m\U2B24\e[0m" unicode_green_light_circle="\e[92m\U2B24\e[0m"
+unicode_yellow_circle="\e[33m\U2B24\e[0m" unicode_yellow_light_circle="\e[93m\U2B24\e[0m"
+unicode_blue_circle="\e[34m\U2B24\e[0m" unicode_blue_light_circle="\e[94m\U2B24\e[0m"
+unicode_magenta_circle="\e[35m\U2B24\e[0m" unicode_magenta_light_circle="\e[95m\U2B24\e[0m"
+unicode_cyan_circle="\e[36m\U2B24\e[0m" unicode_cyan_light_circle="\e[96m\U2B24\e[0m"
+unicode_grey_circle="\e[37m\U2B24\e[0m" unicode_grey_light_circle="\e[97m\U2B24\e[0m"
 
 # Check Script Version and Handle Auto Update
 function PWServerScriptCheckVersion 
@@ -241,7 +311,8 @@ function PWServerHelp {
               "update: Checks for and applies game updates (CPW)."
               "update-script: Checks for updates to this script and updates it if necessary."
               "pwadmin start: Starts the PWAdmin service, enabling administrative functions."
-              "pwadmin stop: Stops the PWAdmin service.")
+              "pwadmin stop: Stops the PWAdmin service."
+              "showconfig: Displays the current configuration settings.")
 
     for cmd in "${commands[@]}"; do
         echo -e "   ${txtcyn}${cmd%%:*}${txtnrm} ${cmd#*:}"
@@ -251,6 +322,31 @@ function PWServerHelp {
     echo
     printf "%*.*s%s\n" 0 $((($width-74)/2)) "$padding" "For more information on a specific command, type '${txtcyn}PWServer [Command] --help${txtnrm}'."
 }
+
+function PWServerShowConfig {
+    echo -e "${txtylw}Current Script Configuration:${txtnrm}"
+    echo -e "Auto Update Script: ${auto_update//true/$unicode_green_circle} ${auto_update//false/$unicode_red_circle}"
+    echo -e "Server Directory: ${ServerDir}"
+    echo -e "Port 1: ${PW_PORT_1}"
+    echo -e "Port 2: ${PW_PORT_2}"
+    echo -e "Port 3: ${PW_PORT_3}"
+    echo -e "Port 4: ${PW_PORT_4}"
+    echo -e "Start GAMED: ${PW_START_GAMED//true/$unicode_green_circle} ${PW_START_GAMED//false/$unicode_red_circle}"
+    echo -e "Start GLINKD 1: ${PW_START_GLINKD_1//true/$unicode_green_circle} ${PW_START_GLINKD_1//false/$unicode_red_circle}"
+    echo -e "Start GLINKD 2: ${PW_START_GLINKD_2//true/$unicode_green_circle} ${PW_START_GLINKD_2//false/$unicode_red_circle}"
+    echo -e "Start GLINKD 3: ${PW_START_GLINKD_3//true/$unicode_green_circle} ${PW_START_GLINKD_3//false/$unicode_red_circle}"
+    echo -e "Start GLINKD 4: ${PW_START_GLINKD_4//true/$unicode_green_circle} ${PW_START_GLINKD_4//false/$unicode_red_circle}"
+    echo -e "Start GAMEDBD: ${PW_START_GAMEDBD//true/$unicode_green_circle} ${PW_START_GAMEDBD//false/$unicode_red_circle}"
+    echo -e "Start GFACTIOND: ${PW_START_GFACTIOND//true/$unicode_green_circle} ${PW_START_GFACTIOND//false/$unicode_red_circle}"
+    echo -e "Start GACD: ${PW_START_GACD//true/$unicode_green_circle} ${PW_START_GACD//false/$unicode_red_circle}"
+    echo -e "Start GDELIVERYD: ${PW_START_GDELIVERYD//true/$unicode_green_circle} ${PW_START_GDELIVERYD//false/$unicode_red_circle}"
+    echo -e "Start GAUTHD: ${PW_START_GAUTHD//true/$unicode_green_circle} ${PW_START_GAUTHD//false/$unicode_red_circle}"
+    echo -e "Start UNIQUENAMED: ${PW_START_UNIQUENAMED//true/$unicode_green_circle} ${PW_START_UNIQUENAMED//false/$unicode_red_circle}"
+    echo -e "Start LOGSERVICE: ${PW_START_LOGSERVICE//true/$unicode_green_circle} ${PW_START_LOGSERVICE//false/$unicode_red_circle}"
+    echo -e "External Backup: ${EXTERNAL_BACKUP//true/$unicode_green_circle} ${EXTERNAL_BACKUP//false/$unicode_red_circle}"
+    echo -e "Backup Retention Days: ${RETENTION_DAYS}"
+}
+
 
 function PWAdminStart {
     PWServerScriptCheckVersion
@@ -612,6 +708,9 @@ function main {
             ;;
         "update-script")
             PWServerScriptAutoUpdate
+            ;;
+        "showconfig")
+            PWServerShowConfig
             ;;
         *)
             PWServerHelp
