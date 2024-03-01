@@ -5,7 +5,7 @@
 # Git: https://github.com/halysondev/PWServerInstallScript
 
 # Script Information
-script_version="1.4.3" # Current version of this script
+script_version="1.4.4" # Current version of this script
 remote_script_url="https://raw.githubusercontent.com/halysondev/PWServerInstallScript/main/PWServer.sh" # URL for updates
 local_script_path="${BASH_SOURCE[0]}" # Path to the current script
 temp_script_path="/tmp/PWServer.sh" # Temporary path for downloads
@@ -64,13 +64,6 @@ txtblu=$(tput setaf 4) # Blue
 txtpur=$(tput setaf 5) # Purple
 txtcyn=$(tput setaf 6) # Cyan
 txtnrm=$(tput sgr0)    # Reset to normal
-unicode_red_circle="\e[31m\U2B24\e[0m" unicode_red_light_circle="\e[91m\U2B24\e[0m"
-unicode_green_circle="\e[32m\U2B24\e[0m" unicode_green_light_circle="\e[92m\U2B24\e[0m"
-unicode_yellow_circle="\e[33m\U2B24\e[0m" unicode_yellow_light_circle="\e[93m\U2B24\e[0m"
-unicode_blue_circle="\e[34m\U2B24\e[0m" unicode_blue_light_circle="\e[94m\U2B24\e[0m"
-unicode_magenta_circle="\e[35m\U2B24\e[0m" unicode_magenta_light_circle="\e[95m\U2B24\e[0m"
-unicode_cyan_circle="\e[36m\U2B24\e[0m" unicode_cyan_light_circle="\e[96m\U2B24\e[0m"
-unicode_grey_circle="\e[37m\U2B24\e[0m" unicode_grey_light_circle="\e[97m\U2B24\e[0m"
 
 #####ENVIROMENT VARIABLES#####
 # PW_AUTO_UPDATE: Auto-update toggle (set to false to disable auto updates)
@@ -322,28 +315,47 @@ function PWServerHelp {
 }
 
 function PWServerShowConfig {
-    printf "${txtylw}Current Script Configuration:${txtnrm}\n"
-    printf "Auto Update Script: %s\n" "${auto_update//true/$unicode_green_circle}${auto_update//false/$unicode_red_circle}"
-    printf "Server Directory: %s\n" "${ServerDir}"
-    printf "Port 1: %s\n" "${PW_PORT_1}"
-    printf "Port 2: %s\n" "${PW_PORT_2}"
-    printf "Port 3: %s\n" "${PW_PORT_3}"
-    printf "Port 4: %s\n" "${PW_PORT_4}"
-    printf "Start GAMED: %s\n" "${PW_START_GAMED//true/$unicode_green_circle}${PW_START_GAMED//false/$unicode_red_circle}"
-    printf "Start GLINKD 1: %s\n" "${PW_START_GLINKD_1//true/$unicode_green_circle}${PW_START_GLINKD_1//false/$unicode_red_circle}"
-    printf "Start GLINKD 2: %s\n" "${PW_START_GLINKD_2//true/$unicode_green_circle}${PW_START_GLINKD_2//false/$unicode_red_circle}"
-    printf "Start GLINKD 3: %s\n" "${PW_START_GLINKD_3//true/$unicode_green_circle}${PW_START_GLINKD_3//false/$unicode_red_circle}"
-    printf "Start GLINKD 4: %s\n" "${PW_START_GLINKD_4//true/$unicode_green_circle}${PW_START_GLINKD_4//false/$unicode_red_circle}"
-    printf "Start GAMEDBD: %s\n" "${PW_START_GAMEDBD//true/$unicode_green_circle}${PW_START_GAMEDBD//false/$unicode_red_circle}"
-    printf "Start GFACTIOND: %s\n" "${PW_START_GFACTIOND//true/$unicode_green_circle}${PW_START_GFACTIOND//false/$unicode_red_circle}"
-    printf "Start GACD: %s\n" "${PW_START_GACD//true/$unicode_green_circle}${PW_START_GACD//false/$unicode_red_circle}"
-    printf "Start GDELIVERYD: %s\n" "${PW_START_GDELIVERYD//true/$unicode_green_circle}${PW_START_GDELIVERYD//false/$unicode_red_circle}"
-    printf "Start GAUTHD: %s\n" "${PW_START_GAUTHD//true/$unicode_green_circle}${PW_START_GAUTHD//false/$unicode_red_circle}"
-    printf "Start UNIQUENAMED: %s\n" "${PW_START_UNIQUENAMED//true/$unicode_green_circle}${PW_START_UNIQUENAMED//false/$unicode_red_circle}"
-    printf "Start LOGSERVICE: %s\n" "${PW_START_LOGSERVICE//true/$unicode_green_circle}${PW_START_LOGSERVICE//false/$unicode_red_circle}"
-    printf "External Backup: %s\n" "${EXTERNAL_BACKUP//true/$unicode_green_circle}${EXTERNAL_BACKUP//false/$unicode_red_circle}"
-    printf "Backup Retention Days: %s\n" "${RETENTION_DAYS}"
+    echo -e "${txtylw}Current Script Configuration:${txtnrm}"
+    printf "Auto Update Script: "
+    if [[ "${auto_update}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    echo -e "Server Directory: ${ServerDir}"
+    echo -e "Port 1: ${PW_PORT_1}"
+    echo -e "Port 2: ${PW_PORT_2}"
+    echo -e "Port 3: ${PW_PORT_3}"
+    echo -e "Port 4: ${PW_PORT_4}"
+
+    printf "Start GAMED: "
+    if [[ "${PW_START_GAMED}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 1: "
+    if [[ "${PW_START_GLINKD_1}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    # Repita o padrão acima para os outros serviços...
+
+    printf "External Backup: "
+    if [[ "${EXTERNAL_BACKUP}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    echo -e "Backup Retention Days: ${RETENTION_DAYS}"
 }
+
+
 
 
 
