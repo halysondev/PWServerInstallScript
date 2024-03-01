@@ -5,7 +5,7 @@
 # Git: https://github.com/halysondev/PWServerInstallScript
 
 # Script Information
-script_version="1.4.4" # Current version of this script
+script_version="1.4.5" # Current version of this script
 remote_script_url="https://raw.githubusercontent.com/halysondev/PWServerInstallScript/main/PWServer.sh" # URL for updates
 local_script_path="${BASH_SOURCE[0]}" # Path to the current script
 temp_script_path="/tmp/PWServer.sh" # Temporary path for downloads
@@ -343,7 +343,75 @@ function PWServerShowConfig {
         echo -e "${txtred}Disabled${txtnrm}"
     fi
 
-    # Repita o padrão acima para os outros serviços...
+    printf "Start GLINKD 2: "
+    if [[ "${PW_START_GLINKD_2}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 3: "
+    if [[ "${PW_START_GLINKD_3}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 4: "
+    if [[ "${PW_START_GLINKD_4}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GAMEDBD: "
+    if [[ "${PW_START_GAMEDBD}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GFACTIOND: "
+    if [[ "${PW_START_GFACTIOND}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GACD: "
+    if [[ "${PW_START_GACD}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GDELIVERYD: "
+    if [[ "${PW_START_GDELIVERYD}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GAUTHD: "
+    if [[ "${PW_START_GAUTHD}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start UNIQUENAMED: "
+    if [[ "${PW_START_UNIQUENAMED}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start LOGSERVICE: "
+    if [[ "${PW_START_LOGSERVICE}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
 
     printf "External Backup: "
     if [[ "${EXTERNAL_BACKUP}" == "true" ]]; then
