@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="1.5.0"
+script_version="1.5.1"
 
 # Perfect World Server Script
 # Author: Halyson Cesar
@@ -193,7 +193,7 @@ function PWServerScriptCheckVersion
 # Auto Update Function
 function PWServerScriptAutoUpdate {
     # Download the remote script to a temporary location
-    curl -s -o "${temp_script_path}" "${remote_script_url}"
+    curl -s -o "${temp_script_path}" -H 'Cache-Control: no-cache' "${remote_script_url}"
     
     # Check if download succeeded
     if [ ! -f "${temp_script_path}" ]; then
