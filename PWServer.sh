@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="1.4.8"
+script_version="1.4.9"
 
 # Perfect World Server Script
 # Author: Halyson Cesar
@@ -229,34 +229,51 @@ function PWServerStart {
         mkdir -p "/$ServerDir/logs/"
     fi
     
-    # List of services to start, each defined by its name and configuration file.
+    # List of services to start, each defined by its name, directory, and executable.
     declare -A services=(
-        ["Log Service"]="${PW_START_LOGSERVICE:-false} logservice/logservice.conf"
-        ["Auth"]="${PW_START_GAUTHD:-false} gauthd/gamesys.conf"
-        ["Unique Name"]="${PW_START_UNIQUENAMED:-false} uniquenamed/gamesys.conf"
-        ["Data Base"]="${PW_START_GAMEDBD:-false} gamedbd/gamesys.conf"
-        ["Anti Cheat"]="${PW_START_GACD:-false} gacd/gamesys.conf"
-        ["Faction"]="${PW_START_GFACTIOND:-false} gfactiond/gamesys.conf"
-        ["Delivery"]="${PW_START_GDELIVERYD:-false} gdeliveryd/gamesys.conf"
-        ["Link 1"]="${PW_START_GLINKD_1:-false} glinkd/gamesys.conf 1"
-        ["Link 2"]="${PW_START_GLINKD_2:-false} glinkd/gamesys.conf 2"
-        ["Link 3"]="${PW_START_GLINKD_3:-false} glinkd/gamesys.conf 3"
-        ["Link 4"]="${PW_START_GLINKD_4:-false} glinkd/gamesys.conf 4"
-        ["Game Service"]="${PW_START_GAMED:-false} gamed/gs01 gs.conf gmserver.conf gsalias.conf" # Multiple configuration files
+        ["Log Service"]="logservice logservice.conf"
+        ["Auth"]="gauthd gamesys.conf"
+        ["Unique Name"]="uniquenamed gamesys.conf"
+        ["Data Base"]="gamedbd gamesys.conf"
+        ["Anti Cheat"]="gacd gamesys.conf"
+        ["Faction"]="gfactiond gamesys.conf"
+        ["Delivery"]="gdeliveryd gamesys.conf"
+        ["Link 1"]="glinkd gamesys.conf 1"
+        ["Link 2"]="glinkd gamesys.conf 2"
+        ["Link 3"]="glinkd gamesys.conf 3"
+        ["Link 4"]="glinkd gamesys.conf 4"
+        ["Game Service"]="gamed gs01 gs.conf gmserver.conf gsalias.conf"
     )
     
+    # Service start flags
+    declare -A service_flags=(
+        ["Log Service"]="${PW_START_LOGSERVICE:-false}"
+        ["Auth"]="${PW_START_GAUTHD:-false}"
+        ["Unique Name"]="${PW_START_UNIQUENAMED:-false}"
+        ["Data Base"]="${PW_START_GAMEDBD:-false}"
+        ["Anti Cheat"]="${PW_START_GACD:-false}"
+        ["Faction"]="${PW_START_GFACTIOND:-false}"
+        ["Delivery"]="${PW_START_GDELIVERYD:-false}"
+        ["Link 1"]="${PW_START_GLINKD_1:-false}"
+        ["Link 2"]="${PW_START_GLINKD_2:-false}"
+        ["Link 3"]="${PW_START_GLINKD_3:-false}"
+        ["Link 4"]="${PW_START_GLINKD_4:-false}"
+        ["Game Service"]="${PW_START_GAMED:-false}"
+    )
+
     # Iterate over the service list and start each one
-    for service in "${!services[@]}"; do
-        read -r start_service config <<< "${services[$service]}"
-        if [[ "$start_service" == "true" ]]; then
-            echo -e "=== [${txtred} START ${txtnrm}] ${service% *} ==="
-            log_path="/$ServerDir/logs/${service% *// /_}.log"
-            cd "/$ServerDir/${service% *}" || continue # Assumes directory name from the service name, skips if not found
-            ./"${service% *}" $config > "$log_path" &
+    for service_name in "${!services[@]}"; do
+        read -r directory executable_args <<< "${services[$service_name]}"
+        if [[ "${service_flags[$service_name]}" == "true" ]]; then
+            echo -e "=== [${txtred} START ${txtnrm}] $service_name ==="
+            log_path="/$ServerDir/logs/${service_name// /_}.log"
+            cd "/$ServerDir/$directory" || { echo "Directory /$ServerDir/$directory not found."; continue; }
+            ./"$directory" $executable_args > "$log_path" &
             echo -e "=== [${txtgrn} OK ${txtnrm}] ===\n"
         fi
     done
 }
+
 
 function PWServerStop {
     PWServerScriptCheckVersion
