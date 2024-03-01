@@ -4,36 +4,92 @@
 # Author: Halyson Cesar
 # Git: https://github.com/halysondev/PWServerInstallScript
 
+
+#####ENVIROMENT VARIABLES#####
+# PW_SERVER_DIR: Directory for server files and logs
+# PW_PORT_1: Port 1 for server
+# PW_PORT_2: Port 2 for server
+# PW_PORT_3: Port 3 for server
+# PW_PORT_4: Port 4 for server
+# PW_DB_HOST: Database host
+# PW_DB_USER: Database user
+# PW_DB_PASSWORD: Database password
+# PW_DB_NAME: Database name
+# PW_EXTERNAL_BACKUP: External backup toggle (set to true to enable external backups)
+# PW_BACKUP_SSH_PASS: SSH password
+# PW_BACKUP_SSH_USER: SSH user
+# PW_BACKUP_SSH_HOST: SSH host
+# PW_BACKUP_DIR: Backup directory
+# PW_BACKUP_LOG_DIR: Backup log directory
+# PW_BACKUP_STORAGE_DIR: Backup storage directory
+# PW_BACKUP_RETENTION_DAYS: Retention period in days
+
+# TO SAVE THE ENVIRONMENT VARIABLES, YOU CAN EDIT .bashrc FILE WITH NANO
+# nano ~/.bashrc
+# AND ADD THE FOLLOWING LINES
+# export PW_SERVER_DIR="PWServer"
+# export PW_PORT_1="29000"
+# export PW_PORT_2="29001"
+# export PW_PORT_3="29002"
+# export PW_PORT_4="29003"
+# export PW_DB_HOST="127.0.0.1"
+# export PW_DB_USER="root"
+# export PW_DB_PASSWORD="1"
+# export PW_DB_NAME="pw"
+# export PW_EXTERNAL_BACKUP="false"
+# export PW_BACKUP_SSH_PASS="1"
+# AND THEN RELOAD THE .bashrc FILE
+# source ~/.bashrc
+
+# to set the environment variables, you can use the export command
+# example: 
+# export PW_SERVER_DIR="PWServer"
+# export PW_PORT_1="29000"
+# export PW_PORT_2="29001" 
+# export PW_PORT_3="29002"
+# export PW_PORT_4="29003"
+# export PW_DB_HOST="127.0.0.1"
+# export PW_DB_USER="root"
+# export PW_DB_PASSWORD="1"
+# export PW_DB_NAME="pw"
+# export PW_EXTERNAL_BACKUP="false"
+# export PW_BACKUP_SSH_PASS="1"
+
+# or edit configuration section in the script
+
+
 # Script Information
-script_version="1.3.5" # Current version of this script
+script_version="1.3.7" # Current version of this script
 remote_script_url="https://raw.githubusercontent.com/halysondev/PWServerInstallScript/main/PWServer.sh" # URL for updates
 local_script_path="${BASH_SOURCE[0]}" # Path to the current script
 temp_script_path="/tmp/PWServer.sh" # Temporary path for downloads
-auto_update="${AUTO_UPDATE:-true}" # Auto-update toggle (set to false to disable auto updates)
+auto_update="${PW_AUTO_UPDATE:-true}" # Auto-update toggle (set to false to disable auto updates)
 
 # Configuration
-ServerDir="${SERVER_DIR:-PWServer}" # Directory for server files and logs
+ServerDir="${PW_SERVER_DIR:-PWServer}" # Directory for server files and logs
 
 PW_PORT_1="${PW_PORT_1:-29000}"
 PW_PORT_2="${PW_PORT_1:-29001}"
 PW_PORT_3="${PW_PORT_1:-29002}"
 PW_PORT_4="${PW_PORT_1:-29003}"
 
-DB_HOST="${DB_HOST:-10.0.0.1}"
-DB_USER="${DB_USER:-root}"
-DB_PASSWORD="${DB_PASSWORD:-1}"
-DB_NAME="${DB_NAME:-pw}"
+DB_HOST="${PW_DB_HOST:-10.0.0.1}"
+DB_USER="${PW_DB_USER:-root}"
+DB_PASSWORD="${PW_DB_PASSWORD:-1}"
+DB_NAME="${PW_DB_NAME:-pw}"
 
-SSH_PASS="${SSH_PASS:-1}"
-SSH_USER="${SSH_USER:-root}"
-SSH_HOST="${SSH_HOST:-10.0.0.2}"
+EXTERNAL_BACKUP="${PW_EXTERNAL_BACKUP:-false}"
 
-BACKUP_DIR="${BACKUP_DIR:-/PWStorage/backup}"
-LOG_DIR="${LOG_DIR:-/PWStorage/logs}"
-STORAGE_DIR="${STORAGE_DIR:-/PWStorage}"
+SSH_PASS="${PW_BACKUP_SSH_PASS:-1}"
+SSH_USER="${PW_BACKUP_SSH_USER:-root}"
+SSH_HOST="${PW_BACKUP_SSH_HOST:-10.0.0.2}"
+
+BACKUP_DIR="${PW_BACKUP_DIR:-/PWStorage/backup}"
+LOG_DIR="${PW_BACKUP_LOG_DIR:-/PWStorage/logs}"
+STORAGE_DIR="${PW_BACKUP_STORAGE_DIR:-/PWStorage}"
 
 # Retention period in days
-RETENTION_DAYS="${RETENTION_DAYS:-5}"
+RETENTION_DAYS="${PW_BACKUP_RETENTION_DAYS:-5}"
 
 # Date format for backup naming
 today=$(date "+%F_%H.%M")
