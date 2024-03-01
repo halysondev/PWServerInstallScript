@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="1.5.1"
+script_version="1.5.2"
 
 # Perfect World Server Script
 # Author: Halyson Cesar
@@ -692,7 +692,7 @@ function PWServerDropCache {
 
     echo "Dropping caches..."
     # Flush filesystem buffers by calling sync
-    sync
+    # sync
     # Drop caches without affecting swap or other kernel entities
     echo 3 > /proc/sys/vm/drop_caches
 
