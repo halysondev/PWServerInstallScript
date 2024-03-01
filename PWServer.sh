@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="1.4.9"
+script_version="1.5.0"
 
 # Perfect World Server Script
 # Author: Halyson Cesar
@@ -783,6 +783,9 @@ function main {
             ;;
         "loadbackup")
             PWServerLoadBackup
+            ;;
+        "backup")
+            PWServerBackup
             ;;
         "update")
             PWServerUpdate
