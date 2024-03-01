@@ -4,6 +4,73 @@
 # Author: Halyson Cesar
 # Git: https://github.com/halysondev/PWServerInstallScript
 
+# Script Information
+script_version="1.4.3" # Current version of this script
+remote_script_url="https://raw.githubusercontent.com/halysondev/PWServerInstallScript/main/PWServer.sh" # URL for updates
+local_script_path="${BASH_SOURCE[0]}" # Path to the current script
+temp_script_path="/tmp/PWServer.sh" # Temporary path for downloads
+auto_update="${PW_AUTO_UPDATE:-true}" # Auto-update toggle (set to false to disable auto updates)
+
+# Configuration
+ServerDir="${PW_SERVER_DIR:-PWServer}" # Directory for server files and logs
+
+PW_PORT_1="${PW_PORT_1:-29000}"
+PW_PORT_2="${PW_PORT_1:-29001}"
+PW_PORT_3="${PW_PORT_1:-29002}"
+PW_PORT_4="${PW_PORT_1:-29003}"
+
+PW_START_GAMED="${PW_START_GAMED:-true}"
+
+PW_START_GLINKD_1="${PW_START_GLINKD_1:-true}"
+PW_START_GLINKD_2="${PW_START_GLINKD_2:-true}"
+PW_START_GLINKD_3="${PW_START_GLINKD_3:-true}"
+PW_START_GLINKD_4="${PW_START_GLINKD_4:-true}"
+
+PW_START_GAMEDBD="${PW_START_GAMEDBD:-true}"
+PW_START_GFACTIOND="${PW_START_GFACTIOND:-true}"
+PW_START_GACD="${PW_START_GACD:-true}"
+PW_START_GDELIVERYD="${PW_START_GDELIVERYD:-true}"
+PW_START_GAUTHD="${PW_START_GAUTHD:-true}"
+PW_START_UNIQUENAMED="${PW_START_UNIQUENAMED:-true}"
+PW_START_LOGSERVICE="${PW_START_LOGSERVICE:-true}"
+
+
+DB_HOST="${PW_DB_HOST:-10.0.0.1}"
+DB_USER="${PW_DB_USER:-root}"
+DB_PASSWORD="${PW_DB_PASSWORD:-1}"
+DB_NAME="${PW_DB_NAME:-pw}"
+
+EXTERNAL_BACKUP="${PW_EXTERNAL_BACKUP:-false}"
+
+SSH_PASS="${PW_BACKUP_SSH_PASS:-1}"
+SSH_USER="${PW_BACKUP_SSH_USER:-root}"
+SSH_HOST="${PW_BACKUP_SSH_HOST:-10.0.0.2}"
+
+BACKUP_DIR="${PW_BACKUP_DIR:-/PWStorage/backup}"
+LOG_DIR="${PW_BACKUP_LOG_DIR:-/PWStorage/logs}"
+STORAGE_DIR="${PW_BACKUP_STORAGE_DIR:-/PWStorage}"
+
+# Retention period in days
+RETENTION_DAYS="${PW_BACKUP_RETENTION_DAYS:-5}"
+
+# Date format for backup naming
+today=$(date "+%F_%H.%M")
+
+# Color Codes for Console Output
+txtred=$(tput setaf 1) # Red
+txtgrn=$(tput setaf 2) # Green
+txtylw=$(tput setaf 3) # Yellow
+txtblu=$(tput setaf 4) # Blue
+txtpur=$(tput setaf 5) # Purple
+txtcyn=$(tput setaf 6) # Cyan
+txtnrm=$(tput sgr0)    # Reset to normal
+unicode_red_circle="\e[31m\U2B24\e[0m" unicode_red_light_circle="\e[91m\U2B24\e[0m"
+unicode_green_circle="\e[32m\U2B24\e[0m" unicode_green_light_circle="\e[92m\U2B24\e[0m"
+unicode_yellow_circle="\e[33m\U2B24\e[0m" unicode_yellow_light_circle="\e[93m\U2B24\e[0m"
+unicode_blue_circle="\e[34m\U2B24\e[0m" unicode_blue_light_circle="\e[94m\U2B24\e[0m"
+unicode_magenta_circle="\e[35m\U2B24\e[0m" unicode_magenta_light_circle="\e[95m\U2B24\e[0m"
+unicode_cyan_circle="\e[36m\U2B24\e[0m" unicode_cyan_light_circle="\e[96m\U2B24\e[0m"
+unicode_grey_circle="\e[37m\U2B24\e[0m" unicode_grey_light_circle="\e[97m\U2B24\e[0m"
 
 #####ENVIROMENT VARIABLES#####
 # PW_AUTO_UPDATE: Auto-update toggle (set to false to disable auto updates)
@@ -119,75 +186,6 @@
 # export PW_BACKUP_RETENTION_DAYS="5"
 
 # or edit configuration section in the script
-
-
-# Script Information
-script_version="1.4.3" # Current version of this script
-remote_script_url="https://raw.githubusercontent.com/halysondev/PWServerInstallScript/main/PWServer.sh" # URL for updates
-local_script_path="${BASH_SOURCE[0]}" # Path to the current script
-temp_script_path="/tmp/PWServer.sh" # Temporary path for downloads
-auto_update="${PW_AUTO_UPDATE:-true}" # Auto-update toggle (set to false to disable auto updates)
-
-# Configuration
-ServerDir="${PW_SERVER_DIR:-PWServer}" # Directory for server files and logs
-
-PW_PORT_1="${PW_PORT_1:-29000}"
-PW_PORT_2="${PW_PORT_1:-29001}"
-PW_PORT_3="${PW_PORT_1:-29002}"
-PW_PORT_4="${PW_PORT_1:-29003}"
-
-PW_START_GAMED="${PW_START_GAMED:-true}"
-
-PW_START_GLINKD_1="${PW_START_GLINKD_1:-true}"
-PW_START_GLINKD_2="${PW_START_GLINKD_2:-true}"
-PW_START_GLINKD_3="${PW_START_GLINKD_3:-true}"
-PW_START_GLINKD_4="${PW_START_GLINKD_4:-true}"
-
-PW_START_GAMEDBD="${PW_START_GAMEDBD:-true}"
-PW_START_GFACTIOND="${PW_START_GFACTIOND:-true}"
-PW_START_GACD="${PW_START_GACD:-true}"
-PW_START_GDELIVERYD="${PW_START_GDELIVERYD:-true}"
-PW_START_GAUTHD="${PW_START_GAUTHD:-true}"
-PW_START_UNIQUENAMED="${PW_START_UNIQUENAMED:-true}"
-PW_START_LOGSERVICE="${PW_START_LOGSERVICE:-true}"
-
-
-DB_HOST="${PW_DB_HOST:-10.0.0.1}"
-DB_USER="${PW_DB_USER:-root}"
-DB_PASSWORD="${PW_DB_PASSWORD:-1}"
-DB_NAME="${PW_DB_NAME:-pw}"
-
-EXTERNAL_BACKUP="${PW_EXTERNAL_BACKUP:-false}"
-
-SSH_PASS="${PW_BACKUP_SSH_PASS:-1}"
-SSH_USER="${PW_BACKUP_SSH_USER:-root}"
-SSH_HOST="${PW_BACKUP_SSH_HOST:-10.0.0.2}"
-
-BACKUP_DIR="${PW_BACKUP_DIR:-/PWStorage/backup}"
-LOG_DIR="${PW_BACKUP_LOG_DIR:-/PWStorage/logs}"
-STORAGE_DIR="${PW_BACKUP_STORAGE_DIR:-/PWStorage}"
-
-# Retention period in days
-RETENTION_DAYS="${PW_BACKUP_RETENTION_DAYS:-5}"
-
-# Date format for backup naming
-today=$(date "+%F_%H.%M")
-
-# Color Codes for Console Output
-txtred=$(tput setaf 1) # Red
-txtgrn=$(tput setaf 2) # Green
-txtylw=$(tput setaf 3) # Yellow
-txtblu=$(tput setaf 4) # Blue
-txtpur=$(tput setaf 5) # Purple
-txtcyn=$(tput setaf 6) # Cyan
-txtnrm=$(tput sgr0)    # Reset to normal
-unicode_red_circle="\e[31m\U2B24\e[0m" unicode_red_light_circle="\e[91m\U2B24\e[0m"
-unicode_green_circle="\e[32m\U2B24\e[0m" unicode_green_light_circle="\e[92m\U2B24\e[0m"
-unicode_yellow_circle="\e[33m\U2B24\e[0m" unicode_yellow_light_circle="\e[93m\U2B24\e[0m"
-unicode_blue_circle="\e[34m\U2B24\e[0m" unicode_blue_light_circle="\e[94m\U2B24\e[0m"
-unicode_magenta_circle="\e[35m\U2B24\e[0m" unicode_magenta_light_circle="\e[95m\U2B24\e[0m"
-unicode_cyan_circle="\e[36m\U2B24\e[0m" unicode_cyan_light_circle="\e[96m\U2B24\e[0m"
-unicode_grey_circle="\e[37m\U2B24\e[0m" unicode_grey_light_circle="\e[97m\U2B24\e[0m"
 
 # Check Script Version and Handle Auto Update
 function PWServerScriptCheckVersion 
