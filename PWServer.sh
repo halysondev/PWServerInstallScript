@@ -2,11 +2,11 @@
 
 # Perfect World Server Script
 # Author: Halyson Cesar
-# Git: https://github.com/halysondev
+# Git: https://github.com/halysondev/PWServerInstallScript
 
 # Script Information
-script_version="1.3.1" # Current version of this script
-remote_script_url="" # URL for updates
+script_version="1.3.5" # Current version of this script
+remote_script_url="https://raw.githubusercontent.com/halysondev/PWServerInstallScript/main/PWServer.sh" # URL for updates
 local_script_path="${BASH_SOURCE[0]}" # Path to the current script
 temp_script_path="/tmp/PWServer.sh" # Temporary path for downloads
 auto_update="${AUTO_UPDATE:-true}" # Auto-update toggle (set to false to disable auto updates)
@@ -90,6 +90,7 @@ function PWServerScriptAutoUpdate {
 
 
 function PWServerStart {
+    PWServerScriptCheckVersion
     # Check and create the log directory if it doesn't exist
     if [ ! -d "/$ServerDir/logs/" ]; then
         mkdir -p "/$ServerDir/logs/"
@@ -131,6 +132,7 @@ function PWServerStart {
 }
 
 function PWServerStop {
+    PWServerScriptCheckVersion
     # Define an array of service names to be stopped
     declare -a services=("logservice" "glinkd" "gauthd" "gdeliveryd" "gacd" "gs" "gfactiond" "uniquenamed" "gamedbd")
 
@@ -185,6 +187,7 @@ function PWServerHelp {
 }
 
 function PWAdminStart {
+    PWServerScriptCheckVersion
     echo -e "=== [${txtred} START ${txtnrm}] PWAdmin Service ==="
     # Ensure the working directory exists and the script is executable
     if [ -d "/$ServerDir/pwadmin" ] && [ -x "/$ServerDir/pwadmin/pwadmin" ]; then
@@ -200,6 +203,7 @@ function PWAdminStart {
 }
 
 function PWAdminStop {
+    PWServerScriptCheckVersion
     echo -e "=== [${txtred} STOP ${txtnrm}] PWAdmin Service ==="
     
     # Ensure the working directory exists and the script is executable
@@ -217,6 +221,7 @@ function PWAdminStop {
 
 
 function PWServerFixDB {
+    PWServerScriptCheckVersion
     # Ensure the fix directory doesn't already exist to prevent overwriting
     if [ -d "/PWStorage/gamedb/dbdata.fix" ]; then
         echo -e "${txtred}The fix directory already exists. Please remove it before attempting a fix.${txtnrm}"
@@ -251,6 +256,7 @@ function PWServerFixDB {
 }
 
 function PWServerLoadBackup {
+    PWServerScriptCheckVersion
     # Remove surrounding spaces that break the command
     FileCount=$(find /PWServer/ -type f -name "*.tar.bz2" | wc -l)
     
@@ -290,6 +296,7 @@ function PWServerLoadBackup {
 
 
 function PWServerUpdate {
+    PWServerScriptCheckVersion
     # Navigate to the update directory
     cd "/$ServerDir/Update/" || { echo "${txtred}Failed to change directory to /$ServerDir/Update/. Exiting.${txtnrm}"; return 1; }
 
@@ -320,6 +327,7 @@ function PWServerUpdate {
 
 
 function PWServerInstall {
+    PWServerScriptCheckVersion
     # Define color codes
     RED='\033[0;31m'
     GREEN='\033[0;32m'
@@ -417,6 +425,7 @@ function PWServerInstall {
 
 
 function PWServerDropCache {
+    PWServerScriptCheckVersion
     # Ensure the script is run with root privileges
     if [ "$(id -u)" != "0" ]; then
         echo "This function needs to be run as root."
@@ -434,6 +443,7 @@ function PWServerDropCache {
 
 # Function to perform backup
 function PWServerBackup {
+    PWServerScriptCheckVersion
     backup_path="${STORAGE_DIR}/${today}-storage"
     backup_file="${BACKUP_DIR}/${today}.tar"
     remote_backup_path="${SSH_HOST}:${BACKUP_DIR}/${today}.tar.bz2"
@@ -466,6 +476,7 @@ function PWServerBackup {
 
 function PWServerDrop
 {
+    PWServerScriptCheckVersion
 	iptables -F
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_1} -j DROP
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_2} -j DROP
@@ -474,7 +485,7 @@ function PWServerDrop
 }
 function PWServerAccept
 {
-
+    PWServerScriptCheckVersion
 	iptables -F
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_1} -j ACCEPT
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_2} -j ACCEPT
