@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="1.5.2"
+script_version="1.7.4"
 
 # Perfect World Server Script
 # Author: Halyson Cesar
@@ -40,7 +40,7 @@ DB_USER="${PW_DB_USER:-root}"
 DB_PASSWORD="${PW_DB_PASSWORD:-1}"
 DB_NAME="${PW_DB_NAME:-pw}"
 
-EXTERNAL_BACKUP="${PW_EXTERNAL_BACKUP:-false}"
+EXTERNAL_BACKUP="${PW_EXTERNAL_BACKUP:-true}"
 
 SSH_PASS="${PW_BACKUP_SSH_PASS:-1}"
 SSH_USER="${PW_BACKUP_SSH_USER:-root}"
@@ -731,6 +731,21 @@ function PWServerBackup {
     fi
 
     # Clean up old backups and logs
+    find "${BACKUP_DIR}" -type f -mtime +${RETENTION_DAYS} -exec rm {} \;
+    find "${LOG_DIR}" -type f -mtime +${RETENTION_DAYS} -exec rm {} \;
+}
+
+function PWServerBackupSync {
+    PWServerScriptCheckVersion
+
+    if [[ "${EXTERNAL_BACKUP}" == "true" ]]; then
+        echo "sync backup to external server..."
+        sshpass -p "${SSH_PASS}" rsync -Ppruvah "${BACKUP_DIR}" "${SSH_USER}@":"${BACKUP_DIR}"
+    fi
+    
+}
+
+function PWServerDeleteOldBackup {
     find "${BACKUP_DIR}" -type f -mtime +${RETENTION_DAYS} -exec rm {} \;
     find "${LOG_DIR}" -type f -mtime +${RETENTION_DAYS} -exec rm {} \;
 }
