@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="1.7.7"
+script_version="1.7.8"
 
 # Perfect World Server Script
 # Author: Halyson Cesar
@@ -743,7 +743,7 @@ function PWServerBackupSync {
 
     if [[ "${EXTERNAL_BACKUP}" == "true" ]]; then
         echo "sync backup to external server..."
-        sshpass -p "'${SSH_PASS}'" rsync -Ppruvah "${BACKUP_DIR}" "${SSH_USER}@":"${BACKUP_DIR}"
+        sshpass -p "${SSH_PASS}" rsync -Ppruvah "${BACKUP_DIR}/" "${SSH_USER}@${SSH_HOST}:${BACKUP_DIR}/"
     fi
     
 }
