@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="1.7.4"
+script_version="1.7.5"
 
 # Perfect World Server Script
 # Author: Halyson Cesar
@@ -313,7 +313,10 @@ function PWServerHelp {
               "install: Installs necessary dependencies and prepares the server's environment."
               "drop-cache: Drops memory cache. Useful for freeing up system memory."
               "fixdb: Repairs the database by fixing any corrupted data."
+              "backup: Make a Backup of Database and Sql"
               "loadbackup: Restores server data from a backup file."
+              "backup-sync: Sync backup to external server."
+              "backup-old: Delete old backups and logs."
               "accept: Iptables ACCEPT for GLINKD external port."
               "drop: Iptables DROP for GLINKD external port."
               "update: Checks for and applies game updates (CPW)."
@@ -801,6 +804,12 @@ function main {
             ;;
         "backup")
             PWServerBackup
+            ;;
+        "backup-sync")
+            PWServerBackupSync
+            ;;
+        "backup-old")
+            PWServerDeleteOldBackup
             ;;
         "update")
             PWServerUpdate
