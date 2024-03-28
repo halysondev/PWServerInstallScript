@@ -269,6 +269,8 @@ function PWServerStart {
             log_path="/$ServerDir/logs/${service_name// /_}.log"
             cd "/$ServerDir/$directory" || { echo "Directory /$ServerDir/$directory not found."; continue; }
             ./"$directory" $executable_args > "$log_path" &
+            echo "Service $service_name started, waiting for 60 seconds before starting the next service."
+            sleep 300
             echo -e "=== [${txtgrn} OK ${txtnrm}] ===\n"
         fi
     done
@@ -285,6 +287,7 @@ function PWServerStop {
         # Attempt to gracefully kill the service
         if pkill -9 "$service"; then
             echo -e "[${txtgrn} OK ${txtnrm}] Stopped ${service}"
+            sleep 300
         else
             # If pkill fails (e.g., service not running), notify the user
             echo -e "[${txtylw} WARNING ${txtnrm}] ${service} could not be stopped or was not running."
