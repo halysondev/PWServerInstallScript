@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="1.7.8"
+script_version="1.7.9"
 
 # Perfect World Server Script
 # Author: Halyson Cesar
@@ -759,32 +759,32 @@ function PWServerDeleteOldBackup {
 function PWServerDrop
 {
     PWServerScriptCheckVersion
-    sleep 30
+    sleep 5
 	iptables -F
-    sleep 30
+    sleep 5
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_1} -j DROP
-    sleep 30
+    sleep 5
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_2} -j DROP
-    sleep 30
+    sleep 5
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_3} -j DROP
-    sleep 30
+    sleep 5
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_4} -j DROP
-    sleep 30
+    sleep 5
 }
 function PWServerAccept
 {
     PWServerScriptCheckVersion
-    sleep 30
+    sleep 5
 	iptables -F
-    sleep 30
+    sleep 5
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_1} -j ACCEPT
-    sleep 30
+    sleep 5
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_2} -j ACCEPT
-    sleep 30
+    sleep 5
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_3} -j ACCEPT
-    sleep 30
+    sleep 5
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_4} -j ACCEPT
-    sleep 30
+    sleep 5
 }
 
 function main {
