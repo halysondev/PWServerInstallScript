@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="1.7.9"
+script_version="1.8.0"
 
 # Perfect World Server Script
 # Author: Halyson Cesar
@@ -270,7 +270,7 @@ function PWServerStart {
             cd "/$ServerDir/$directory" || { echo "Directory /$ServerDir/$directory not found."; continue; }
             ./"$directory" $executable_args > "$log_path" &
             echo "Service $service_name started, waiting for 60 seconds before starting the next service."
-            sleep 300
+            sleep 15
             echo -e "=== [${txtgrn} OK ${txtnrm}] ===\n"
         fi
     done
@@ -287,7 +287,7 @@ function PWServerStop {
         # Attempt to gracefully kill the service
         if pkill -9 "$service"; then
             echo -e "[${txtgrn} OK ${txtnrm}] Stopped ${service}"
-            sleep 300
+            sleep 15
         else
             # If pkill fails (e.g., service not running), notify the user
             echo -e "[${txtylw} WARNING ${txtnrm}] ${service} could not be stopped or was not running."
