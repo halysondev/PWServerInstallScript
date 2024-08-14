@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="1.8.3"
+script_version="1.8.5"
 
 # Perfect World Server Script
 # Author: Halyson Cesar
@@ -117,67 +117,104 @@ function PWServerScriptAutoUpdate {
 }
 
 
-function PWServerStart {
-    PWServerScriptCheckVersion
-    # Check and create the log directory if it doesn't exist
-    if [ ! -d "/$ServerDir/logs/" ]; then
-        mkdir -p "/$ServerDir/logs/"
-    fi
+function StartService {
+    service_name="$1"
+    directory="$2"
+    executable="$3"
+    args="$4"
     
-    # List of services to start, each defined by its name, directory, and executable.
-    declare -A services=(
-        ["Log Service"]="logservice logservice.conf"
-        ["Auth"]="gauthd gamesys.conf"
-        ["Unique Name"]="uniquenamed gamesys.conf"
-        ["Data Base"]="gamedbd gamesys.conf"
-        ["Anti Cheat"]="gacd gamesys.conf"
-        ["Faction"]="gfactiond gamesys.conf"
-        ["Delivery"]="gdeliveryd gamesys.conf"
-        ["Link 1"]="glinkd gamesys.conf 1"
-        ["Link 2"]="glinkd gamesys.conf 2"
-        ["Link 3"]="glinkd gamesys.conf 3"
-        ["Link 4"]="glinkd gamesys.conf 4"
-        ["Game Service"]="gamed gs01 gs.conf gmserver.conf gsalias.conf"
-        ["Monitor"]="monitor"
-    )
-    
-    # Service start flags
-    declare -A service_flags=(
-        ["Log Service"]="${PW_START_LOGSERVICE:-false}"
-        ["Auth"]="${PW_START_GAUTHD:-false}"
-        ["Unique Name"]="${PW_START_UNIQUENAMED:-false}"
-        ["Data Base"]="${PW_START_GAMEDBD:-false}"
-        ["Anti Cheat"]="${PW_START_GACD:-false}"
-        ["Faction"]="${PW_START_GFACTIOND:-false}"
-        ["Delivery"]="${PW_START_GDELIVERYD:-false}"
-        ["Link 1"]="${PW_START_GLINKD_1:-false}"
-        ["Link 2"]="${PW_START_GLINKD_2:-false}"
-        ["Link 3"]="${PW_START_GLINKD_3:-false}"
-        ["Link 4"]="${PW_START_GLINKD_4:-false}"
-        ["Game Service"]="${PW_START_GAMED:-false}"
-        ["Monitor"]="${PW_START_MONITOR:-false}"
-    )
+    log_path="/$ServerDir/logs/${directory}.log"
+    echo "Starting $service_name with $executable $args" | tee -a "$log_path"
 
-    # Iterate over the service list and start each one
-    for service_name in "${!services[@]}"; do
-        read -r directory executable_args <<< "${services[$service_name]}"
-        if [[ "${service_flags[$service_name]}" == "true" ]]; then
-            echo -e "=== [${txtred} START ${txtnrm}] $service_name ==="
-            log_path="/$ServerDir/logs/${service_name// /_}.log"
-            cd "/$ServerDir/$directory" || { echo "Directory /$ServerDir/$directory not found."; continue; }
-            ./"$directory" $executable_args > "$log_path" &
-            echo "Service $service_name started, waiting for 60 seconds before starting the next service."
-            sleep "${SLEEP_TIME}"
-            echo -e "=== [${txtgrn} OK ${txtnrm}] ===\n"
-        fi
-    done
+    if [[ ! -d "/$ServerDir/$directory" ]]; then
+        echo "Directory /$ServerDir/$directory does not exist." | tee -a "$log_path"
+        return
+    fi
+
+    if [[ ! -x "/$ServerDir/$directory/$executable" ]]; then
+        echo "Executable /$ServerDir/$directory/$executable not found or is not executable." | tee -a "$log_path"
+        return
+    fi
+
+    # Executar o comando separadamente, sem aspas em volta da linha completa
+	cd "/$ServerDir/$directory"
+    ./"$executable" $args > "$log_path" &
+	cd "/$ServerDir"
+	
+	sleep "$SLEEP_TIME"
+    
+    echo "$service_name started, check $log_path for details." | tee -a "$log_path"
 }
 
+function FixConfigure {
+    sed -i 's/\r$//' /$ServerDir/configure
+}
+
+function PWServerStart {
+	echo "Starting services..."
+
+	FixConfigure
+
+    if [ "$PW_START_LOGSERVICE" = "true" ]; then
+		echo "Starting Log Service..."
+        StartService "Log Service" "logservice" "logservice" "logservice.conf"
+    fi
+
+    if [ "$PW_START_MONITOR" = "true" ]; then
+		echo "Starting Monitor..."
+        StartService "Monitor" "monitor" "monitor" ""
+    fi
+
+    if [ "$PW_START_GAUTHD" = "true" ]; then
+		echo "Starting Auth Service..."
+        StartService "Auth Service" "gauthd" "gauthd" "gamesys.conf"
+    fi
+
+    if [ "$PW_START_UNIQUENAMED" = "true" ]; then
+        StartService "Unique Name" "uniquenamed" "uniquenamed" "gamesys.conf"
+    fi
+
+    if [ "$PW_START_GAMEDBD" = "true" ]; then
+        StartService "Data Base" "gamedbd" "gamedbd" "gamesys.conf"
+    fi
+
+    if [ "$PW_START_GACD" = "true" ]; then
+        StartService "Anti Cheat" "gacd" "gacd" "gamesys.conf"
+    fi
+
+    if [ "$PW_START_GFACTIOND" = "true" ]; then
+        StartService "Faction" "gfactiond" "gfactiond" "gamesys.conf"
+    fi
+
+    if [ "$PW_START_GDELIVERYD" = "true" ]; then
+        StartService "Delivery" "gdeliveryd" "gdeliveryd" "gamesys.conf"
+    fi
+
+    if [ "$PW_START_GLINKD_1" = "true" ]; then
+        StartService "Link 1" "glinkd" "glinkd" "gamesys.conf 1"
+    fi
+
+    if [ "$PW_START_GLINKD_2" = "true" ]; then
+        StartService "Link 2" "glinkd" "glinkd" "gamesys.conf 2"
+    fi
+
+    if [ "$PW_START_GLINKD_3" = "true" ]; then
+        StartService "Link 3" "glinkd" "glinkd" "gamesys.conf 3"
+    fi
+
+    if [ "$PW_START_GLINKD_4" = "true" ]; then
+        StartService "Link 4" "glinkd" "glinkd" "gamesys.conf 4"
+    fi
+
+    if [ "$PW_START_GAMED" = "true" ]; then
+        StartService "Game Service" "gamed" "gs" "gs01 gs.conf gmserver.conf gsalias.conf"
+    fi
+}
 
 function PWServerStop {
-    PWServerScriptCheckVersion
+    #PWServerScriptCheckVersion
     # Define an array of service names to be stopped
-    declare -a services=("logservice" "glinkd" "gauthd" "gdeliveryd" "gacd" "gs" "gfactiond" "uniquenamed" "gamedbd", "monitor")
+    declare -a services=("logservice" "glinkd" "gauthd" "gdeliveryd" "gacd" "gs" "gfactiond" "uniquenamed" "gamedbd" "monitor")
 
     # Iterate through the array and stop each service
     for service in "${services[@]}"; do
