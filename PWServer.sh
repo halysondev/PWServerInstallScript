@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="1.8.5"
+script_version="1.8.8"
 
 # Perfect World Server Script
 # Author: Halyson Cesar
@@ -151,6 +151,8 @@ function FixConfigure {
 }
 
 function PWServerStart {
+    PWServerScriptCheckVersion
+
 	echo "Starting services..."
 
 	FixConfigure
@@ -212,7 +214,7 @@ function PWServerStart {
 }
 
 function PWServerStop {
-    #PWServerScriptCheckVersion
+    PWServerScriptCheckVersion
     # Define an array of service names to be stopped
     declare -a services=("logservice" "glinkd" "gauthd" "gdeliveryd" "gacd" "gs" "gfactiond" "uniquenamed" "gamedbd" "monitor")
 
@@ -800,7 +802,7 @@ function PWServerInstallDebian11 {
 
 
 function PWServerDropCache {
-    #PWServerScriptCheckVersion
+    PWServerScriptCheckVersion
     # Ensure the script is run with root privileges
     if [ "$(id -u)" != "0" ]; then
         echo "This function needs to be run as root."
@@ -898,6 +900,30 @@ function PWServerAccept
     sleep "${SLEEP_TIME}"
 }
 
+# Function to install crontab job
+function InstallCrontabJob {
+    local command="$1"
+    local time="$2"
+    (crontab -l 2>/dev/null; echo "$time $command") | crontab -
+    echo -e "${txtgrn}Crontab job installed: $command at $time${txtnrm}"
+}
+
+function InstallCrontabDrop {
+    InstallCrontabJob "PWServer drop-cache" "$1"
+}
+
+function InstallCrontabBackup {
+    InstallCrontabJob "PWServer backup" "$1"
+}
+
+function InstallCrontabBackupSync {
+    InstallCrontabJob "PWServer backup-sync" "$1"
+}
+
+function InstallCrontabBackupOld {
+    InstallCrontabJob "PWServer backup-old" "$1"
+}
+
 function main {
     case $1 in
         "pwadmin")
@@ -948,6 +974,18 @@ function main {
             ;;
         "drop-cache")
             PWServerDropCache
+            ;;
+        "install-crontab-drop")
+            InstallCrontabDrop "$2"
+            ;;
+        "install-backup")
+            InstallCrontabBackup "$2"
+            ;;
+        "install-backup-sync")
+            InstallCrontabBackupSync "$2"
+            ;;
+        "install-backup-old")
+            InstallCrontabBackupOld "$2"
             ;;
         "restart")
             echo "Restarting the server..."
