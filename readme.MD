@@ -23,7 +23,49 @@ chmod +x PWServer.sh    \
 ./PWServer.sh install
 ````
 ## Usage
-Before running the script, configure the necessary environment variables according to your server setup. This can be done by editing your .bashrc file or exporting them directly in your terminal session.
+Before running the script, configure the necessary environment variables according to your server setup. This can be done by editing your .bashrc file or exporting them directly in your terminal session, or create a file name "configure" in "/PWServer" and edit your settings
+
+## Configure Example
+
+```bash
+#PWSERVER CONFIG
+export PW_AUTO_UPDATE="true" # Auto-update toggle (set to false to disable auto updates)
+#DIR
+export PW_SERVER_DIR="PWServer" # Directory for server files and logs
+#EXTERNAL PORTS
+export PW_PORT_1="29000"
+export PW_PORT_2="29001"
+export PW_PORT_3="29002"
+export PW_PORT_4="29003"
+#START
+export PW_START_GAMED="true"
+export PW_START_GLINKD_1="true"
+export PW_START_GLINKD_2="false"
+export PW_START_GLINKD_3="false"
+export PW_START_GLINKD_4="false"
+export PW_START_GAMEDBD="true"
+export PW_START_GFACTIOND="true"
+export PW_START_GACD="true"
+export PW_START_GDELIVERYD="true"
+export PW_START_GAUTHD="true"
+export PW_START_UNIQUENAMED="true"
+export PW_START_LOGSERVICE="true"
+export PW_START_MONITOR="true"
+#BACKUP
+export PW_DB_HOST="10.10.0.1"
+export PW_DB_USER="root"
+export PW_DB_PASSWORD="1"
+export PW_DB_NAME="pw"
+export PW_EXTERNAL_BACKUP="false"
+export PW_BACKUP_SSH_PASS="1"
+export PW_BACKUP_SSH_USER="root"
+export PW_BACKUP_SSH_HOST="10.10.0.1"
+export PW_BACKUP_DIR="/PWStorage/backup"
+export PW_BACKUP_LOG_DIR="/PWStorage/logs"
+export PW_BACKUP_STORAGE_DIR="/PWStorage"
+export PW_BACKUP_RETENTION_DAYS="5"
+export PW_SLEEP_TIME="5"
+````
 
 ## Basic Commands
 **Start the server:**

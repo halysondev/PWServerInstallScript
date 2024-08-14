@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="1.8.0"
+script_version="1.8.3"
 
 # Perfect World Server Script
 # Author: Halyson Cesar
@@ -9,15 +9,22 @@ script_version="1.8.0"
 remote_script_url="https://raw.githubusercontent.com/halysondev/PWServerInstallScript/main/PWServer.sh" # URL for updates
 local_script_path="${BASH_SOURCE[0]}" # Path to the current script
 temp_script_path="/tmp/PWServer.sh" # Temporary path for downloads
+config_file="/PWServer/configure" # Configuration file path
+
+# Load configuration from file
+if [ -f "$config_file" ]; then
+    source "$config_file"
+fi
+
 auto_update="${PW_AUTO_UPDATE:-true}" # Auto-update toggle (set to false to disable auto updates)
 
 # Configuration
 ServerDir="${PW_SERVER_DIR:-PWServer}" # Directory for server files and logs
 
 PW_PORT_1="${PW_PORT_1:-29000}"
-PW_PORT_2="${PW_PORT_1:-29001}"
-PW_PORT_3="${PW_PORT_1:-29002}"
-PW_PORT_4="${PW_PORT_1:-29003}"
+PW_PORT_2="${PW_PORT_2:-29001}"
+PW_PORT_3="${PW_PORT_3:-29002}"
+PW_PORT_4="${PW_PORT_4:-29003}"
 
 PW_START_GAMED="${PW_START_GAMED:-true}"
 
@@ -33,6 +40,7 @@ PW_START_GDELIVERYD="${PW_START_GDELIVERYD:-true}"
 PW_START_GAUTHD="${PW_START_GAUTHD:-true}"
 PW_START_UNIQUENAMED="${PW_START_UNIQUENAMED:-true}"
 PW_START_LOGSERVICE="${PW_START_LOGSERVICE:-true}"
+PW_START_MONITOR="${PW_START_MONITOR:-true}"
 
 
 DB_HOST="${PW_DB_HOST:-10.0.0.1}"
@@ -53,6 +61,8 @@ STORAGE_DIR="${PW_BACKUP_STORAGE_DIR:-/PWStorage}"
 # Retention period in days
 RETENTION_DAYS="${PW_BACKUP_RETENTION_DAYS:-5}"
 
+SLEEP_TIME="${PW_SLEEP_TIME:-5}"
+
 # Date format for backup naming
 today=$(date "+%F_%H.%M")
 
@@ -64,121 +74,6 @@ txtblu=$(tput setaf 4) # Blue
 txtpur=$(tput setaf 5) # Purple
 txtcyn=$(tput setaf 6) # Cyan
 txtnrm=$(tput sgr0)    # Reset to normal
-
-#####ENVIROMENT VARIABLES#####
-# PW_AUTO_UPDATE: Auto-update toggle (set to false to disable auto updates)
-# PW_SERVER_DIR: Directory for server files and logs
-# PW_PORT_1: Port 1 for server
-# PW_PORT_2: Port 2 for server
-# PW_PORT_3: Port 3 for server
-# PW_PORT_4: Port 4 for server
-# PW_DB_HOST: Database host
-# PW_DB_USER: Database user
-# PW_DB_PASSWORD: Database password
-# PW_DB_NAME: Database name
-# PW_EXTERNAL_BACKUP: External backup toggle (set to true to enable external backups)
-# PW_BACKUP_SSH_PASS: SSH password
-# PW_BACKUP_SSH_USER: SSH user
-# PW_BACKUP_SSH_HOST: SSH host
-# PW_BACKUP_DIR: Backup directory
-# PW_BACKUP_LOG_DIR: Backup log directory
-# PW_BACKUP_STORAGE_DIR: Backup storage directory
-# PW_BACKUP_RETENTION_DAYS: Retention period in days
-# PW_START_GAMED: Start GAMED service
-# PW_START_GLINKD_1: Start GLINKD service 1
-# PW_START_GLINKD_2: Start GLINKD service 2
-# PW_START_GLINKD_3: Start GLINKD service 3
-# PW_START_GLINKD_4: Start GLINKD service 4
-# PW_START_GAMEDBD: Start GAMEDBD service
-# PW_START_GFACTIOND: Start GFACTIOND service
-# PW_START_GACD: Start GACD service
-# PW_START_GDELIVERYD: Start GDELIVERYD service
-# PW_START_GAUTHD: Start GAUTHD service
-# PW_START_UNIQUENAMED: Start UNIQUENAMED service
-# PW_START_LOGSERVICE: Start LOGSERVICE service
-
-# TO SAVE THE ENVIRONMENT VARIABLES, YOU CAN EDIT .bashrc FILE WITH NANO
-# nano ~/.bashrc
-# AND ADD THE FOLLOWING LINES
-#PWSERVER CONFIG
-#AUTO UPDATE
-# export PW_AUTO_UPDATE="true"
-#DIR
-# export PW_SERVER_DIR="PWServer"
-#EXTERNAL PORTS
-# export PW_PORT_1="29000"
-# export PW_PORT_2="29001"
-# export PW_PORT_3="29002"
-# export PW_PORT_4="29003"
-#START
-# export PW_START_GAMED="true"
-# export PW_START_GLINKD_1="true"
-# export PW_START_GLINKD_2="true"
-# export PW_START_GLINKD_3="true"
-# export PW_START_GLINKD_4="true"
-# export PW_START_GAMEDBD="true"
-# export PW_START_GFACTIOND="true"
-# export PW_START_GACD="true"
-# export PW_START_GDELIVERYD="true"
-# export PW_START_GAUTHD="true"
-# export PW_START_UNIQUENAMED="true"
-# export PW_START_LOGSERVICE="true"
-#BACKUP
-# export PW_DB_HOST="127.0.0.1"
-# export PW_DB_USER="root"
-# export PW_DB_PASSWORD="1"
-# export PW_DB_NAME="pw"
-# export PW_EXTERNAL_BACKUP="false"
-# export PW_BACKUP_SSH_PASS="1"
-# export PW_BACKUP_SSH_USER="root"
-# export PW_BACKUP_SSH_HOST="127.0.0.1"
-# export PW_BACKUP_DIR="/PWStorage/backup"
-# export PW_BACKUP_LOG_DIR="/PWStorage/logs"
-# export PW_BACKUP_STORAGE_DIR="/PWStorage"
-# export PW_BACKUP_RETENTION_DAYS="5"
-# AND THEN RELOAD THE .bashrc FILE
-# source ~/.bashrc
-
-# to set the environment variables, you can use the export command
-# example: 
-#PWSERVER CONFIG
-#AUTO UPDATE
-# export PW_AUTO_UPDATE="true"
-#DIR
-# export PW_SERVER_DIR="PWServer"
-#EXTERNAL PORTS
-# export PW_PORT_1="29000"
-# export PW_PORT_2="29001"
-# export PW_PORT_3="29002"
-# export PW_PORT_4="29003"
-#START
-# export PW_START_GAMED="true"
-# export PW_START_GLINKD_1="true"
-# export PW_START_GLINKD_2="true"
-# export PW_START_GLINKD_3="true"
-# export PW_START_GLINKD_4="true"
-# export PW_START_GAMEDBD="true"
-# export PW_START_GFACTIOND="true"
-# export PW_START_GACD="true"
-# export PW_START_GDELIVERYD="true"
-# export PW_START_GAUTHD="true"
-# export PW_START_UNIQUENAMED="true"
-# export PW_START_LOGSERVICE="true"
-#BACKUP
-# export PW_DB_HOST="127.0.0.1"
-# export PW_DB_USER="root"
-# export PW_DB_PASSWORD="1"
-# export PW_DB_NAME="pw"
-# export PW_EXTERNAL_BACKUP="false"
-# export PW_BACKUP_SSH_PASS="1"
-# export PW_BACKUP_SSH_USER="root"
-# export PW_BACKUP_SSH_HOST="127.0.0.1"
-# export PW_BACKUP_DIR="/PWStorage/backup"
-# export PW_BACKUP_LOG_DIR="/PWStorage/logs"
-# export PW_BACKUP_STORAGE_DIR="/PWStorage"
-# export PW_BACKUP_RETENTION_DAYS="5"
-
-# or edit configuration section in the script
 
 # Check Script Version and Handle Auto Update
 function PWServerScriptCheckVersion 
@@ -243,6 +138,7 @@ function PWServerStart {
         ["Link 3"]="glinkd gamesys.conf 3"
         ["Link 4"]="glinkd gamesys.conf 4"
         ["Game Service"]="gamed gs01 gs.conf gmserver.conf gsalias.conf"
+        ["Monitor"]="monitor"
     )
     
     # Service start flags
@@ -259,6 +155,7 @@ function PWServerStart {
         ["Link 3"]="${PW_START_GLINKD_3:-false}"
         ["Link 4"]="${PW_START_GLINKD_4:-false}"
         ["Game Service"]="${PW_START_GAMED:-false}"
+        ["Monitor"]="${PW_START_MONITOR:-false}"
     )
 
     # Iterate over the service list and start each one
@@ -270,7 +167,7 @@ function PWServerStart {
             cd "/$ServerDir/$directory" || { echo "Directory /$ServerDir/$directory not found."; continue; }
             ./"$directory" $executable_args > "$log_path" &
             echo "Service $service_name started, waiting for 60 seconds before starting the next service."
-            sleep 15
+            sleep "${SLEEP_TIME}"
             echo -e "=== [${txtgrn} OK ${txtnrm}] ===\n"
         fi
     done
@@ -280,14 +177,14 @@ function PWServerStart {
 function PWServerStop {
     PWServerScriptCheckVersion
     # Define an array of service names to be stopped
-    declare -a services=("logservice" "glinkd" "gauthd" "gdeliveryd" "gacd" "gs" "gfactiond" "uniquenamed" "gamedbd")
+    declare -a services=("logservice" "glinkd" "gauthd" "gdeliveryd" "gacd" "gs" "gfactiond" "uniquenamed" "gamedbd", "monitor")
 
     # Iterate through the array and stop each service
     for service in "${services[@]}"; do
         # Attempt to gracefully kill the service
         if pkill -9 "$service"; then
             echo -e "[${txtgrn} OK ${txtnrm}] Stopped ${service}"
-            sleep 15
+            sleep "${SLEEP_TIME}"
         else
             # If pkill fails (e.g., service not running), notify the user
             echo -e "[${txtylw} WARNING ${txtnrm}] ${service} could not be stopped or was not running."
@@ -431,6 +328,13 @@ function PWServerShowConfig {
 
     printf "Start LOGSERVICE: "
     if [[ "${PW_START_LOGSERVICE}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start MONITOR: "
+    if [[ "${PW_START_MONITOR}" == "true" ]]; then
         echo -e "${txtgrn}Enabled${txtnrm}"
     else
         echo -e "${txtred}Disabled${txtnrm}"
@@ -589,9 +493,179 @@ function PWServerUpdate {
     fi
 }
 
+function detect_os_version {
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        os_name=$ID
+        os_version=$VERSION_ID
+
+        if [[ "$os_name" == "debian" && "$os_version" == "11" ]]; then
+            echo "Detected Debian 11"
+            PWServerInstallDebian11
+        elif [[ "$os_name" == "debian" && "$os_version" == "12" ]]; then
+            echo "Detected Debian 12"
+            PWServerInstallDebian12
+        else
+            echo "Unsupported OS version: $os_name $os_version"
+            exit 1
+        fi
+    else
+        echo "Cannot detect OS version. /etc/os-release not found."
+        exit 1
+    fi
+}
 
 function PWServerInstall {
     PWServerScriptCheckVersion
+    detect_os_version
+}
+
+function PWServerInstallDebian12 {
+    PWServerScriptCheckVersion
+
+    echo "Proceeding with installation for Debian 12..."
+
+    # Define color codes
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[0;33m'
+    NO_COLOR='\033[0m' # No Color
+
+    echo -e "${YELLOW}Checking for required setups...${NO_COLOR}"
+
+    # Add i386 architecture if not already added
+    if dpkg --print-foreign-architectures | grep -qv i386; then
+        echo -e "${YELLOW}Adding i386 architecture...${NO_COLOR}"
+        dpkg --add-architecture i386
+    else
+        echo -e "${GREEN}i386 architecture already added.${NO_COLOR}"
+    fi
+
+    echo -e "${YELLOW}Updating and upgrading packages...${NO_COLOR}"
+    apt update && apt upgrade -y
+
+    # Check if contrib and non-free-firmware repositories are already in the debian.sources
+    if ! grep -q "contrib non-free-firmware" /etc/apt/sources.list.d/debian.sources; then
+        echo -e "${YELLOW}Adding contrib and non-free-firmware repositories...${NO_COLOR}"
+        sed -i 's/Components: main/Components: main contrib non-free-firmware/g' /etc/apt/sources.list.d/debian.sources
+        apt update # Update package lists after adding new repositories
+    else
+        echo -e "${GREEN}contrib and non-free-firmware repositories already present.${NO_COLOR}"
+    fi
+
+
+    echo -e "${YELLOW}Installing necessary packages...${NO_COLOR}"
+    # Define necessary packages in an array
+    packages=(
+        libxml-dom-perl libxml2-dev libssl-dev libpcre3-dev
+        libstdc++5 build-essential gcc-multilib g++-multilib libstdc++6 libgcc1
+        zlib1g libncurses5 mc screen htop mono-complete exim4 p7zip* libpcap-dev
+        curl wget ipset net-tools tzdata ntpdate
+        make gcc g++ libssl-dev libcrypto++-dev libpcre3 libpcre3-dev
+        libtesseract-dev libx11-dev gcc-multilib libc6-dev
+        build-essential gcc-multilib g++-multilib libtemplate-plugin-xml-perl libxml2-dev
+        php libapache2-mod-php php-cli php-fpm php-json php-pdo php-zip php-gd php-mbstring
+        php-curl php-xml php-pear php-bcmath php-cgi php-mysqli php-common php-phpseclib php-mysql php-bcmath php-ssh2 php-imagick
+        libdb++-dev libdb-dev libdb5.3 libdb5.3++ libdb5.3++-dev
+        libdb5.3-dbg libdb5.3-dev libmysqlcppconn-dev dos2unix
+        nano git mariadb-client mariadb-server mariadb-common
+        libjsoncpp25 libjsoncpp-dev libjsoncpp-doc
+        libcurl4 libcurl4-openssl-dev
+        libmariadb3 libmariadb-dev wget tar xz-utils bash
+    )
+
+    for pkg in "${packages[@]}"; do
+        if ! dpkg -l | grep -qw "$pkg"; then
+            apt install -y --fix-missing "$pkg"
+        else
+            echo -e "${GREEN}$pkg is already installed.${NO_COLOR}"
+        fi
+    done
+
+     # Install UPX
+    wget https://github.com/upx/upx/releases/download/v4.2.4/upx-4.2.4-amd64_linux.tar.xz
+    tar -xf upx-4.2.4-amd64_linux.tar.xz
+    mv upx-4.2.4-amd64_linux/upx /usr/local/bin/
+    rm -r upx-4.2.4-amd64_linux upx-4.2.4-amd64_linux.tar.xz
+
+    # Check if /PWServer directory exists
+    if [ ! -d "/PWServer" ]; then
+        echo -e "${YELLOW}Creating /PWServer directory and adjusting permissions...${NO_COLOR}"
+        mkdir /PWServer && chmod -R 0755 /PWServer
+    else
+        echo -e "${GREEN}/PWServer directory already exists. Skipping creation.${NO_COLOR}"
+    fi
+
+    # Create symbolic links if they don't exist
+    echo -e "${YELLOW}Creating symbolic links...${NO_COLOR}"
+    declare -A links=(
+        ["/PWServer/license.conf"]="/home/license.conf"
+        ["/PWServer/gamed/libtask.so"]="/lib/libtask.so"
+        ["/PWServer/gamed/libskill.so"]="/lib/libskill.so"
+    )
+
+    for src in "${!links[@]}"; do
+        dest="${links[$src]}"
+        if [ ! -L "$dest" ]; then
+            ln -s "$src" "$dest"
+            echo -e "${GREEN}Created link $dest -> $src${NO_COLOR}"
+        else
+            echo -e "${GREEN}Link $dest already exists. Skipping.${NO_COLOR}"
+        fi
+    done
+
+     # Install locales and generate locale settings
+    apt-get update && apt-get install -y locales dialog
+    rm -rf /var/lib/apt/lists/*
+    sed -i '5,$s/^# \([^ ]\)/\1/' /etc/locale.gen
+    locale-gen
+
+    # Set locale environment variables
+    export LANG=en_US.UTF-8
+    export LANGUAGE=en_US:en
+    export LC_ALL=en_US.UTF-8
+
+    echo "export LANG=en_US.UTF-8" >> ~/.bashrc
+    echo "export LANGUAGE=en_US:en" >> ~/.bashrc
+    echo "export LC_CTYPE=en_US.UTF-8" >> ~/.bashrc
+    echo "export LC_NUMERIC=en_US.UTF-8" >> ~/.bashrc
+    echo "export LC_TIME=en_US.UTF-8" >> ~/.bashrc
+    echo "export LC_COLLATE=en_US.UTF-8" >> ~/.bashrc
+    echo "export LC_MONETARY=en_US.UTF-8" >> ~/.bashrc
+    echo "export LC_MESSAGES=en_US.UTF-8" >> ~/.bashrc
+    echo "export LC_PAPER=en_US.UTF-8" >> ~/.bashrc
+    echo "export LC_NAME=en_US.UTF-8" >> ~/.bashrc
+    echo "export LC_ADDRESS=en_US.UTF-8" >> ~/.bashrc
+    echo "export LC_TELEPHONE=en_US.UTF-8" >> ~/.bashrc
+    echo "export LC_MEASUREMENT=en_US.UTF-8" >> ~/.bashrc
+    echo "export LC_IDENTIFICATION=en_US.UTF-8" >> ~/.bashrc
+
+    # Install GCC 10 for compatibility, then remove the source
+    echo "deb http://deb.debian.org/debian/ bullseye main contrib non-free" >> /etc/apt/sources.list
+    apt-get update
+    apt-get install -y gcc-10 g++-10
+    sed -i '/bullseye/d' /etc/apt/sources.list
+    apt-get update && apt-get clean
+    rm -rf /var/lib/apt/lists/*
+
+    echo -e "${YELLOW}Cleaning up packages that are no longer required...${NO_COLOR}"
+    apt autoremove -y
+
+    echo -e "${YELLOW}Setting up script for future use...${NO_COLOR}"
+    script_dest="/PWServer/PWServer.sh"
+    cp -f "$0" "$script_dest" && chmod +x "$script_dest"
+    echo -e "${GREEN}Script copied to $script_dest.${NO_COLOR}"
+
+    # Create a symbolic link to this script in /usr/bin for easy access
+    ln -sf "$script_dest" /usr/bin/PWServer
+    echo -e "${GREEN}Symbolic link to script created in /usr/bin/PWServer.${NO_COLOR}"
+}
+
+function PWServerInstallDebian11 {
+    PWServerScriptCheckVersion
+
+    echo "Proceeding with installation for Debian 11..."
+
     # Define color codes
     RED='\033[0;31m'
     GREEN='\033[0;32m'
@@ -659,7 +733,7 @@ function PWServerInstall {
     # Create symbolic links if they don't exist
     echo -e "${YELLOW}Creating symbolic links...${NO_COLOR}"
     declare -A links=(
-        ["/PWServer/gamed/license"]="/home/license"
+        ["/PWServer/license.conf"]="/home/license.conf"
         ["/PWServer/gamed/libtask.so"]="/lib/libtask.so"
         ["/PWServer/gamed/libskill.so"]="/lib/libskill.so"
     )
@@ -689,7 +763,7 @@ function PWServerInstall {
 
 
 function PWServerDropCache {
-    PWServerScriptCheckVersion
+    #PWServerScriptCheckVersion
     # Ensure the script is run with root privileges
     if [ "$(id -u)" != "0" ]; then
         echo "This function needs to be run as root."
@@ -707,7 +781,7 @@ function PWServerDropCache {
 
 # Function to perform backup
 function PWServerBackup {
-    PWServerScriptCheckVersion
+    #PWServerScriptCheckVersion
     backup_path="${STORAGE_DIR}/${today}-storage"
     backup_file="${BACKUP_DIR}/${today}.tar"
     remote_backup_path="${SSH_HOST}:${BACKUP_DIR}/${today}.tar.bz2"
@@ -742,7 +816,7 @@ function PWServerBackup {
 }
 
 function PWServerBackupSync {
-    PWServerScriptCheckVersion
+    #PWServerScriptCheckVersion
 
     if [[ "${EXTERNAL_BACKUP}" == "true" ]]; then
         echo "sync backup to external server..."
@@ -758,33 +832,33 @@ function PWServerDeleteOldBackup {
 
 function PWServerDrop
 {
-    PWServerScriptCheckVersion
-    sleep 5
+    #PWServerScriptCheckVersion
+    sleep "${SLEEP_TIME}"
 	iptables -F
-    sleep 5
+    sleep "${SLEEP_TIME}"
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_1} -j DROP
-    sleep 5
+    sleep "${SLEEP_TIME}"
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_2} -j DROP
-    sleep 5
+    sleep "${SLEEP_TIME}"
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_3} -j DROP
-    sleep 5
+    sleep "${SLEEP_TIME}"
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_4} -j DROP
-    sleep 5
+    sleep "${SLEEP_TIME}"
 }
 function PWServerAccept
 {
-    PWServerScriptCheckVersion
-    sleep 5
+    #PWServerScriptCheckVersion
+    sleep "${SLEEP_TIME}"
 	iptables -F
-    sleep 5
+    sleep "${SLEEP_TIME}"
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_1} -j ACCEPT
-    sleep 5
+    sleep "${SLEEP_TIME}"
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_2} -j ACCEPT
-    sleep 5
+    sleep "${SLEEP_TIME}"
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_3} -j ACCEPT
-    sleep 5
+    sleep "${SLEEP_TIME}"
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_4} -j ACCEPT
-    sleep 5
+    sleep "${SLEEP_TIME}"
 }
 
 function main {
@@ -841,7 +915,7 @@ function main {
         "restart")
             echo "Restarting the server..."
             PWServerStop
-            sleep 300 # Waiting for 5 minutes before restarting might be too long for some scenarios. Adjust as needed.
+            sleep "${SLEEP_TIME}" # Waiting for 5 minutes before restarting might be too long for some scenarios. Adjust as needed.
             PWServerStart
             ;;
         "update-script")
