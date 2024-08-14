@@ -615,38 +615,38 @@ function PWServerInstallDebian12 {
     done
 
      # Install locales and generate locale settings
-    apt-get update && apt-get install -y locales dialog
-    rm -rf /var/lib/apt/lists/*
-    sed -i '5,$s/^# \([^ ]\)/\1/' /etc/locale.gen
-    locale-gen
+    #apt-get update && apt-get install -y locales dialog
+    #rm -rf /var/lib/apt/lists/*
+    #sed -i '5,$s/^# \([^ ]\)/\1/' /etc/locale.gen
+    #locale-gen
 
     # Set locale environment variables
-    export LANG=en_US.UTF-8
-    export LANGUAGE=en_US:en
-    export LC_ALL=en_US.UTF-8
+    #export LANG=en_US.UTF-8
+    #export LANGUAGE=en_US:en
+    #export LC_ALL=en_US.UTF-8
 
-    echo "export LANG=en_US.UTF-8" >> ~/.bashrc
-    echo "export LANGUAGE=en_US:en" >> ~/.bashrc
-    echo "export LC_CTYPE=en_US.UTF-8" >> ~/.bashrc
-    echo "export LC_NUMERIC=en_US.UTF-8" >> ~/.bashrc
-    echo "export LC_TIME=en_US.UTF-8" >> ~/.bashrc
-    echo "export LC_COLLATE=en_US.UTF-8" >> ~/.bashrc
-    echo "export LC_MONETARY=en_US.UTF-8" >> ~/.bashrc
-    echo "export LC_MESSAGES=en_US.UTF-8" >> ~/.bashrc
-    echo "export LC_PAPER=en_US.UTF-8" >> ~/.bashrc
-    echo "export LC_NAME=en_US.UTF-8" >> ~/.bashrc
-    echo "export LC_ADDRESS=en_US.UTF-8" >> ~/.bashrc
-    echo "export LC_TELEPHONE=en_US.UTF-8" >> ~/.bashrc
-    echo "export LC_MEASUREMENT=en_US.UTF-8" >> ~/.bashrc
-    echo "export LC_IDENTIFICATION=en_US.UTF-8" >> ~/.bashrc
+    #echo "export LANG=en_US.UTF-8" >> ~/.bashrc
+    #echo "export LANGUAGE=en_US:en" >> ~/.bashrc
+    #echo "export LC_CTYPE=en_US.UTF-8" >> ~/.bashrc
+    #echo "export LC_NUMERIC=en_US.UTF-8" >> ~/.bashrc
+    #echo "export LC_TIME=en_US.UTF-8" >> ~/.bashrc
+    #echo "export LC_COLLATE=en_US.UTF-8" >> ~/.bashrc
+    #echo "export LC_MONETARY=en_US.UTF-8" >> ~/.bashrc
+    #echo "export LC_MESSAGES=en_US.UTF-8" >> ~/.bashrc
+    #echo "export LC_PAPER=en_US.UTF-8" >> ~/.bashrc
+    #echo "export LC_NAME=en_US.UTF-8" >> ~/.bashrc
+    #echo "export LC_ADDRESS=en_US.UTF-8" >> ~/.bashrc
+    #echo "export LC_TELEPHONE=en_US.UTF-8" >> ~/.bashrc
+    #echo "export LC_MEASUREMENT=en_US.UTF-8" >> ~/.bashrc
+    #echo "export LC_IDENTIFICATION=en_US.UTF-8" >> ~/.bashrc
 
     # Install GCC 10 for compatibility, then remove the source
-    echo "deb http://deb.debian.org/debian/ bullseye main contrib non-free" >> /etc/apt/sources.list
-    apt-get update
-    apt-get install -y gcc-10 g++-10
-    sed -i '/bullseye/d' /etc/apt/sources.list
-    apt-get update && apt-get clean
-    rm -rf /var/lib/apt/lists/*
+    #echo "deb http://deb.debian.org/debian/ bullseye main contrib non-free" >> /etc/apt/sources.list
+    #apt-get update
+    #apt-get install -y gcc-10 g++-10
+    #sed -i '/bullseye/d' /etc/apt/sources.list
+    #apt-get update && apt-get clean
+    #rm -rf /var/lib/apt/lists/*
 
     echo -e "${YELLOW}Cleaning up packages that are no longer required...${NO_COLOR}"
     apt autoremove -y
