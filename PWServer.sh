@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="1.8.8"
+script_version="1.8.9"
 
 # Perfect World Server Script
 # Author: Halyson Cesar
@@ -25,6 +25,22 @@ PW_PORT_1="${PW_PORT_1:-29000}"
 PW_PORT_2="${PW_PORT_2:-29001}"
 PW_PORT_3="${PW_PORT_3:-29002}"
 PW_PORT_4="${PW_PORT_4:-29003}"
+PW_PORT_5="${PW_PORT_5:-29004}"
+PW_PORT_6="${PW_PORT_6:-29005}"
+PW_PORT_7="${PW_PORT_7:-29006}"
+PW_PORT_8="${PW_PORT_8:-29007}"
+PW_PORT_9="${PW_PORT_9:-29008}"
+PW_PORT_10="${PW_PORT_10:-29009}"
+PW_PORT_11="${PW_PORT_11:-29010}"
+PW_PORT_12="${PW_PORT_12:-29011}"
+PW_PORT_13="${PW_PORT_13:-29012}"
+PW_PORT_14="${PW_PORT_14:-29013}"
+PW_PORT_15="${PW_PORT_15:-29014}"
+PW_PORT_16="${PW_PORT_16:-29015}"
+PW_PORT_17="${PW_PORT_17:-29016}"
+PW_PORT_18="${PW_PORT_18:-29017}"
+PW_PORT_19="${PW_PORT_19:-29018}"
+PW_PORT_20="${PW_PORT_20:-29019}"
 
 PW_START_GAMED="${PW_START_GAMED:-true}"
 
@@ -32,6 +48,23 @@ PW_START_GLINKD_1="${PW_START_GLINKD_1:-true}"
 PW_START_GLINKD_2="${PW_START_GLINKD_2:-true}"
 PW_START_GLINKD_3="${PW_START_GLINKD_3:-true}"
 PW_START_GLINKD_4="${PW_START_GLINKD_4:-true}"
+PW_START_GLINKD_5="${PW_START_GLINKD_5:-false}"
+PW_START_GLINKD_6="${PW_START_GLINKD_6:-false}"
+PW_START_GLINKD_7="${PW_START_GLINKD_7:-false}"
+PW_START_GLINKD_8="${PW_START_GLINKD_8:-false}"
+PW_START_GLINKD_9="${PW_START_GLINKD_9:-false}"
+PW_START_GLINKD_10="${PW_START_GLINKD_10:-false}"
+PW_START_GLINKD_11="${PW_START_GLINKD_11:-false}"
+PW_START_GLINKD_12="${PW_START_GLINKD_12:-false}"
+PW_START_GLINKD_13="${PW_START_GLINKD_13:-false}"
+PW_START_GLINKD_14="${PW_START_GLINKD_14:-false}"
+PW_START_GLINKD_15="${PW_START_GLINKD_15:-false}"
+PW_START_GLINKD_16="${PW_START_GLINKD_16:-false}"
+PW_START_GLINKD_17="${PW_START_GLINKD_17:-false}"
+PW_START_GLINKD_18="${PW_START_GLINKD_18:-false}"
+PW_START_GLINKD_19="${PW_START_GLINKD_19:-false}"
+PW_START_GLINKD_20="${PW_START_GLINKD_20:-false}"
+
 
 PW_START_GAMEDBD="${PW_START_GAMEDBD:-true}"
 PW_START_GFACTIOND="${PW_START_GFACTIOND:-true}"
@@ -41,9 +74,10 @@ PW_START_GAUTHD="${PW_START_GAUTHD:-true}"
 PW_START_UNIQUENAMED="${PW_START_UNIQUENAMED:-true}"
 PW_START_LOGSERVICE="${PW_START_LOGSERVICE:-true}"
 PW_START_MONITOR="${PW_START_MONITOR:-true}"
+PW_START_GAMETALKD="${PW_START_GAMETALKD:-true}"
 
 
-DB_HOST="${PW_DB_HOST:-10.0.0.1}"
+DB_HOST="${PW_DB_HOST:-127.0.0.1}"
 DB_USER="${PW_DB_USER:-root}"
 DB_PASSWORD="${PW_DB_PASSWORD:-1}"
 DB_NAME="${PW_DB_NAME:-pw}"
@@ -52,7 +86,7 @@ EXTERNAL_BACKUP="${PW_EXTERNAL_BACKUP:-true}"
 
 SSH_PASS="${PW_BACKUP_SSH_PASS:-1}"
 SSH_USER="${PW_BACKUP_SSH_USER:-root}"
-SSH_HOST="${PW_BACKUP_SSH_HOST:-10.0.0.2}"
+SSH_HOST="${PW_BACKUP_SSH_HOST:-127.0.0.1}"
 
 BACKUP_DIR="${PW_BACKUP_DIR:-/PWStorage/backup}"
 LOG_DIR="${PW_BACKUP_LOG_DIR:-/PWStorage/logs}"
@@ -208,6 +242,74 @@ function PWServerStart {
         StartService "Link 4" "glinkd" "glinkd" "gamesys.conf 4"
     fi
 
+    if [ "$PW_START_GLINKD_5" = "true" ]; then
+        StartService "Link 5" "glinkd" "glinkd" "gamesys.conf 5"
+    fi
+
+    if [ "$PW_START_GLINKD_6" = "true" ]; then
+        StartService "Link 6" "glinkd" "glinkd" "gamesys.conf 6"
+    fi
+
+    if [ "$PW_START_GLINKD_7" = "true" ]; then
+        StartService "Link 7" "glinkd" "glinkd" "gamesys.conf 7"
+    fi
+
+    if [ "$PW_START_GLINKD_8" = "true" ]; then
+        StartService "Link 8" "glinkd" "glinkd" "gamesys.conf 8"
+    fi
+
+    if [ "$PW_START_GLINKD_9" = "true" ]; then
+        StartService "Link 9" "glinkd" "glinkd" "gamesys.conf 9"
+    fi
+
+    if [ "$PW_START_GLINKD_10" = "true" ]; then
+        StartService "Link 10" "glinkd" "glinkd" "gamesys.conf 10"
+    fi
+
+    if [ "$PW_START_GLINKD_11" = "true" ]; then
+        StartService "Link 11" "glinkd" "glinkd" "gamesys.conf 11"
+    fi
+
+    if [ "$PW_START_GLINKD_12" = "true" ]; then
+        StartService "Link 12" "glinkd" "glinkd" "gamesys.conf 12"
+    fi
+
+    if [ "$PW_START_GLINKD_13" = "true" ]; then
+        StartService "Link 13" "glinkd" "glinkd" "gamesys.conf 13"
+    fi
+
+    if [ "$PW_START_GLINKD_14" = "true" ]; then
+        StartService "Link 14" "glinkd" "glinkd" "gamesys.conf 14"
+    fi
+
+    if [ "$PW_START_GLINKD_15" = "true" ]; then
+        StartService "Link 15" "glinkd" "glinkd" "gamesys.conf 15"
+    fi
+
+    if [ "$PW_START_GLINKD_16" = "true" ]; then
+        StartService "Link 16" "glinkd" "glinkd" "gamesys.conf 16"
+    fi
+
+    if [ "$PW_START_GLINKD_17" = "true" ]; then
+        StartService "Link 17" "glinkd" "glinkd" "gamesys.conf 17"
+    fi
+
+    if [ "$PW_START_GLINKD_18" = "true" ]; then
+        StartService "Link 18" "glinkd" "glinkd" "gamesys.conf 18"
+    fi
+
+    if [ "$PW_START_GLINKD_19" = "true" ]; then
+        StartService "Link 19" "glinkd" "glinkd" "gamesys.conf 19"
+    fi
+
+    if [ "$PW_START_GLINKD_20" = "true" ]; then
+        StartService "Link 20" "glinkd" "glinkd" "gamesys.conf 20"
+    fi
+
+    if [ "$PW_START_GAMETALKD" = "true" ]; then
+        StartService "Game Talk" "gametalkd" "gametalkd" "gamesys.conf"
+    fi
+
     if [ "$PW_START_GAMED" = "true" ]; then
         StartService "Game Service" "gamed" "gs" "gs01 gs.conf gmserver.conf gsalias.conf"
     fi
@@ -216,7 +318,7 @@ function PWServerStart {
 function PWServerStop {
     PWServerScriptCheckVersion
     # Define an array of service names to be stopped
-    declare -a services=("logservice" "glinkd" "gauthd" "gdeliveryd" "gacd" "gs" "gfactiond" "uniquenamed" "gamedbd" "monitor")
+    declare -a services=("logservice" "glinkd" "gauthd" "gdeliveryd" "gacd" "gs" "gfactiond" "uniquenamed" "gamedbd" "monitor" "gametalkd")
 
     # Iterate through the array and stop each service
     for service in "${services[@]}"; do
@@ -287,6 +389,22 @@ function PWServerShowConfig {
     echo -e "Port 2: ${PW_PORT_2}"
     echo -e "Port 3: ${PW_PORT_3}"
     echo -e "Port 4: ${PW_PORT_4}"
+    echo -e "Port 5: ${PW_PORT_5}"
+    echo -e "Port 6: ${PW_PORT_6}"
+    echo -e "Port 7: ${PW_PORT_7}"
+    echo -e "Port 8: ${PW_PORT_8}"
+    echo -e "Port 9: ${PW_PORT_9}"
+    echo -e "Port 10: ${PW_PORT_10}"
+    echo -e "Port 11: ${PW_PORT_11}"
+    echo -e "Port 12: ${PW_PORT_12}"
+    echo -e "Port 13: ${PW_PORT_13}"
+    echo -e "Port 14: ${PW_PORT_14}"
+    echo -e "Port 15: ${PW_PORT_15}"
+    echo -e "Port 16: ${PW_PORT_16}"
+    echo -e "Port 17: ${PW_PORT_17}"
+    echo -e "Port 18: ${PW_PORT_18}"
+    echo -e "Port 19: ${PW_PORT_19}"
+    echo -e "Port 20: ${PW_PORT_20}"
 
     printf "Start GAMED: "
     if [[ "${PW_START_GAMED}" == "true" ]]; then
@@ -318,6 +436,118 @@ function PWServerShowConfig {
 
     printf "Start GLINKD 4: "
     if [[ "${PW_START_GLINKD_4}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 5: "
+    if [[ "${PW_START_GLINKD_5}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 6: "
+    if [[ "${PW_START_GLINKD_6}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 7: "
+    if [[ "${PW_START_GLINKD_7}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 8: "
+    if [[ "${PW_START_GLINKD_8}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 9: "
+    if [[ "${PW_START_GLINKD_9}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 10: "
+    if [[ "${PW_START_GLINKD_10}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 11: "
+    if [[ "${PW_START_GLINKD_11}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 12: "
+    if [[ "${PW_START_GLINKD_12}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 13: "
+    if [[ "${PW_START_GLINKD_13}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 14: "
+    if [[ "${PW_START_GLINKD_14}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 15: "
+    if [[ "${PW_START_GLINKD_15}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 16: "
+    if [[ "${PW_START_GLINKD_16}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 17: "
+    if [[ "${PW_START_GLINKD_17}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 18: "
+    if [[ "${PW_START_GLINKD_18}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 19: "
+    if [[ "${PW_START_GLINKD_19}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GLINKD 20: "
+    if [[ "${PW_START_GLINKD_20}" == "true" ]]; then
         echo -e "${txtgrn}Enabled${txtnrm}"
     else
         echo -e "${txtred}Disabled${txtnrm}"
@@ -374,6 +604,13 @@ function PWServerShowConfig {
 
     printf "Start MONITOR: "
     if [[ "${PW_START_MONITOR}" == "true" ]]; then
+        echo -e "${txtgrn}Enabled${txtnrm}"
+    else
+        echo -e "${txtred}Disabled${txtnrm}"
+    fi
+
+    printf "Start GAMETALKD: "
+    if [[ "${PW_START_GAMETALKD}" == "true" ]]; then
         echo -e "${txtgrn}Enabled${txtnrm}"
     else
         echo -e "${txtred}Disabled${txtnrm}"
@@ -875,14 +1112,88 @@ function PWServerDrop
     sleep "${SLEEP_TIME}"
 	iptables -F
     sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_1}" != "0" ]]; then
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_1} -j DROP
+    fi
     sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_2}" != "0" ]]; then
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_2} -j DROP
+    fi
     sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_3}" != "0" ]]; then
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_3} -j DROP
+    fi
     sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_4}" != "0" ]]; then
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_4} -j DROP
+    fi
     sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_5}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_5} -j DROP
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_6}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_6} -j DROP
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_7}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_7} -j DROP
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_8}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_8} -j DROP
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_9}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_9} -j DROP
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_10}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_10} -j DROP
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_11}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_11} -j DROP
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_12}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_12} -j DROP
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_13}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_13} -j DROP
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_14}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_14} -j DROP
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_15}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_15} -j DROP
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_16}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_16} -j DROP
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_17}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_17} -j DROP
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_18}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_18} -j DROP
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_19}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_19} -j DROP
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_20}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_20} -j DROP
+    fi
+    
+    
+    
 }
 function PWServerAccept
 {
@@ -890,14 +1201,85 @@ function PWServerAccept
     sleep "${SLEEP_TIME}"
 	iptables -F
     sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_1}" != "0" ]]; then
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_1} -j ACCEPT
+    fi
     sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_2}" != "0" ]]; then
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_2} -j ACCEPT
+    fi
     sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_3}" != "0" ]]; then
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_3} -j ACCEPT
+    fi
     sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_4}" != "0" ]]; then
 	iptables -A INPUT -p tcp --destination-port ${PW_PORT_4} -j ACCEPT
+    fi
     sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_5}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_5} -j ACCEPT
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_6}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_6} -j ACCEPT
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_7}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_7} -j ACCEPT
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_8}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_8} -j ACCEPT
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_9}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_9} -j ACCEPT
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_10}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_10} -j ACCEPT
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_11}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_11} -j ACCEPT
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_12}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_12} -j ACCEPT
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_13}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_13} -j ACCEPT
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_14}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_14} -j ACCEPT
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_15}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_15} -j ACCEPT
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_16}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_16} -j ACCEPT
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_17}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_17} -j ACCEPT
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_18}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_18} -j ACCEPT
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_19}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_19} -j ACCEPT
+    fi
+    sleep "${SLEEP_TIME}"
+    if [[ "${PW_PORT_20}" != "0" ]]; then
+	iptables -A INPUT -p tcp --destination-port ${PW_PORT_20} -j ACCEPT  
+    fi
 }
 
 # Function to install crontab job
