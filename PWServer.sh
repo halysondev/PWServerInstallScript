@@ -1,5 +1,5 @@
 #!/bin/bash
-script_version="1.8.9"
+script_version="1.9.1"
 
 # Perfect World Server Script
 # Author: Halyson Cesar
@@ -42,8 +42,51 @@ PW_PORT_18="${PW_PORT_18:-29017}"
 PW_PORT_19="${PW_PORT_19:-29018}"
 PW_PORT_20="${PW_PORT_20:-29019}"
 
-PW_START_GAMED="${PW_START_GAMED:-true}"
+PW_EXTERNAL_IP_1="${PW_EXTERNAL_IP_1:-0}"
+PW_EXTERNAL_IP_2="${PW_EXTERNAL_IP_2:-0}"
+PW_EXTERNAL_IP_3="${PW_EXTERNAL_IP_3:-0}"
+PW_EXTERNAL_IP_4="${PW_EXTERNAL_IP_4:-0}"
+PW_EXTERNAL_IP_5="${PW_EXTERNAL_IP_5:-0}"
+PW_EXTERNAL_IP_6="${PW_EXTERNAL_IP_6:-0}"
+PW_EXTERNAL_IP_7="${PW_EXTERNAL_IP_7:-0}"
+PW_EXTERNAL_IP_8="${PW_EXTERNAL_IP_8:-0}"
+PW_EXTERNAL_IP_9="${PW_EXTERNAL_IP_9:-0}"
+PW_EXTERNAL_IP_10="${PW_EXTERNAL_IP_10:-0}"
+PW_EXTERNAL_IP_11="${PW_EXTERNAL_IP_11:-0}"
+PW_EXTERNAL_IP_12="${PW_EXTERNAL_IP_12:-0}"
+PW_EXTERNAL_IP_13="${PW_EXTERNAL_IP_13:-0}"
+PW_EXTERNAL_IP_14="${PW_EXTERNAL_IP_14:-0}"
+PW_EXTERNAL_IP_15="${PW_EXTERNAL_IP_15:-0}"
+PW_EXTERNAL_IP_16="${PW_EXTERNAL_IP_16:-0}"
+PW_EXTERNAL_IP_17="${PW_EXTERNAL_IP_17:-0}"
+PW_EXTERNAL_IP_18="${PW_EXTERNAL_IP_18:-0}"
+PW_EXTERNAL_IP_19="${PW_EXTERNAL_IP_19:-0}"
+PW_EXTERNAL_IP_20="${PW_EXTERNAL_IP_20:-0}"
 
+PW_EXTERNAL_PORT_1="${PW_EXTERNAL_PORT_1:-0}"
+PW_EXTERNAL_PORT_2="${PW_EXTERNAL_PORT_2:-0}"
+PW_EXTERNAL_PORT_3="${PW_EXTERNAL_PORT_3:-0}"
+PW_EXTERNAL_PORT_4="${PW_EXTERNAL_PORT_4:-0}"
+PW_EXTERNAL_PORT_5="${PW_EXTERNAL_PORT_5:-0}"
+PW_EXTERNAL_PORT_6="${PW_EXTERNAL_PORT_6:-0}"
+PW_EXTERNAL_PORT_7="${PW_EXTERNAL_PORT_7:-0}"
+PW_EXTERNAL_PORT_8="${PW_EXTERNAL_PORT_8:-0}"
+PW_EXTERNAL_PORT_9="${PW_EXTERNAL_PORT_9:-0}"
+PW_EXTERNAL_PORT_10="${PW_EXTERNAL_PORT_10:-0}"
+PW_EXTERNAL_PORT_11="${PW_EXTERNAL_PORT_11:-0}"
+PW_EXTERNAL_PORT_12="${PW_EXTERNAL_PORT_12:-0}"
+PW_EXTERNAL_PORT_13="${PW_EXTERNAL_PORT_13:-0}"
+PW_EXTERNAL_PORT_14="${PW_EXTERNAL_PORT_14:-0}"
+PW_EXTERNAL_PORT_15="${PW_EXTERNAL_PORT_15:-0}"
+PW_EXTERNAL_PORT_16="${PW_EXTERNAL_PORT_16:-0}"
+PW_EXTERNAL_PORT_17="${PW_EXTERNAL_PORT_17:-0}"
+PW_EXTERNAL_PORT_18="${PW_EXTERNAL_PORT_18:-0}"
+PW_EXTERNAL_PORT_19="${PW_EXTERNAL_PORT_19:-0}"
+PW_EXTERNAL_PORT_20="${PW_EXTERNAL_PORT_20:-0}"
+
+PW_ALLOW_SSH_PORT_DEFAULT="${PW_ALLOW_SSH_PORT_DEFAULT:-true}"
+
+PW_START_GAMED="${PW_START_GAMED:-true}"
 PW_START_GLINKD_1="${PW_START_GLINKD_1:-true}"
 PW_START_GLINKD_2="${PW_START_GLINKD_2:-true}"
 PW_START_GLINKD_3="${PW_START_GLINKD_3:-true}"
@@ -360,6 +403,9 @@ function PWServerHelp {
               "backup-old: Delete old backups and logs."
               "accept: Iptables ACCEPT for GLINKD external port."
               "drop: Iptables DROP for GLINKD external port."
+              "accept-external: Iptables ACCEPT for external provider connections, with IP-based filtering."
+              "drop-external: Iptables DROP for external provider connections, preserving SSH access."
+              "clear-firewall-rules: Clears all firewall rules and sets default policies to ACCEPT."
               "update: Checks for and applies game updates (CPW)."
               "update-script: Checks for updates to this script and updates it if necessary."
               "pwadmin start: Starts the PWAdmin service, enabling administrative functions."
@@ -1282,6 +1328,94 @@ function PWServerAccept
     fi
 }
 
+function PWServerAcceptExternal {
+    #PWServerScriptCheckVersion
+    sleep "${SLEEP_TIME}"
+    iptables -F
+    sleep "${SLEEP_TIME}"
+    
+    # Allow SSH connections if PW_ALLOW_SSH_PORT_DEFAULT is true
+    if [[ "${PW_ALLOW_SSH_PORT_DEFAULT}" == "true" ]]; then
+        iptables -A INPUT -p tcp --destination-port 22 -j ACCEPT
+    fi
+    
+    # Configure rules for each port
+    for port_idx in {1..20}; do
+        port_var="PW_EXTERNAL_PORT_$port_idx"
+        port=${!port_var}
+        
+        if [[ "$port" != "0" ]]; then
+            # Drop all connections to this port initially
+            iptables -A INPUT -p tcp --destination-port "$port" -j DROP
+            
+            # For each port, check all IPs and allow ones that are > 0
+            for ip_idx in {1..20}; do
+                ip_var="PW_EXTERNAL_IP_$ip_idx"
+                ip=${!ip_var}
+                
+                if [[ "$ip" != "0" ]]; then
+                    iptables -I INPUT -p tcp -s "$ip" --destination-port "$port" -j ACCEPT
+                    sleep "${SLEEP_TIME}"
+                fi
+            done
+        fi
+    done
+}
+
+function PWServerDropExternal {
+    #PWServerScriptCheckVersion
+    sleep "${SLEEP_TIME}"
+    iptables -F
+    sleep "${SLEEP_TIME}"
+    
+    # Allow SSH connections if PW_ALLOW_SSH_PORT_DEFAULT is true
+    if [[ "${PW_ALLOW_SSH_PORT_DEFAULT}" == "true" ]]; then
+        iptables -A INPUT -p tcp --destination-port 22 -j ACCEPT
+    fi
+    
+    # Drop connections to configured external ports
+    for port_idx in {1..20}; do
+        port_var="PW_EXTERNAL_PORT_$port_idx"
+        port=${!port_var}
+        
+        if [[ "$port" != "0" ]]; then
+            # Drop all connections to this port
+            iptables -A INPUT -p tcp --destination-port "$port" -j DROP
+            
+            # For each port, check all IPs and allow ones that are > 0
+            for ip_idx in {1..20}; do
+                ip_var="PW_EXTERNAL_IP_$ip_idx"
+                ip=${!ip_var}
+                
+                if [[ "$ip" != "0" ]]; then
+                    iptables -I INPUT -p tcp -s "$ip" --destination-port "$port" -j DROP
+                    sleep "${SLEEP_TIME}"
+                fi
+            done
+        fi
+    done
+}
+
+function PWServerClearFirewallRules {
+    #PWServerScriptCheckVersion
+    echo "Clearing all firewall rules..."
+    
+    # Flush all rules
+    iptables -F
+    iptables -X
+    iptables -t nat -F
+    iptables -t nat -X
+    iptables -t mangle -F
+    iptables -t mangle -X
+    
+    # Set default policies to ACCEPT
+    iptables -P INPUT ACCEPT
+    iptables -P FORWARD ACCEPT
+    iptables -P OUTPUT ACCEPT
+    
+    echo "All firewall rules cleared. All traffic is now allowed."
+}
+
 # Function to install crontab job
 function InstallCrontabJob {
     local command="$1"
@@ -1353,6 +1487,15 @@ function main {
             ;;
         "drop")
             PWServerDrop
+            ;;
+        "accept-external")
+            PWServerAcceptExternal
+            ;;
+        "drop-external")
+            PWServerDropExternal
+            ;;
+        "clear-firewall-rules")
+            PWServerClearFirewallRules
             ;;
         "drop-cache")
             PWServerDropCache
